@@ -1,0 +1,945 @@
+/* @settings
+name: Folder Color System
+id: folder-color-system
+settings:
+
+- id: palette
+  title: Color Palette
+  type: class-select
+  default: palette-pink
+  options:
+    - label: Pink / Purple
+      value: palette-pink
+    - label: Blue
+      value: palette-blue
+    - label: Rainbow
+      value: palette-rainbow
+    - label: Mono Lavender
+      value: palette-mono
+    - label: Neon
+      value: palette-neon
+    - label: Forest
+      value: palette-forest
+    - label: Frost
+      value: palette-frost
+    - label: Sakura
+      value: palette-sakura
+    - label: Ocean
+      value: palette-ocean
+    - label: Sunset
+      value: palette-sunset
+    - label: Autumn
+      value: palette-autumn
+    - label: Candy
+      value: palette-candy
+    - label: Cyberpunk
+      value: palette-cyberpunk
+    - label: Earth
+      value: palette-earth
+    - label: Mint
+      value: palette-mint
+    - label: Grape
+      value: palette-grape
+    - label: Midnight
+      value: palette-midnight
+    - label: Rose Gold
+      value: palette-rosegold
+    - label: Fire
+      value: palette-fire
+    - label: Teal
+      value: palette-teal
+    - label: Lavender
+      value: palette-lavender
+    - label: Peach
+      value: palette-peach
+    - label: Berry
+      value: palette-berry
+    - label: Emerald
+      value: palette-emerald
+    - label: Desert
+      value: palette-desert
+    - label: Coffee
+      value: palette-coffee
+    - label: Ice
+      value: palette-ice
+    - label: Vaporwave
+      value: palette-vaporwave
+    - label: Solarized
+      value: palette-solarized
+    - label: Slate
+      value: palette-slate
+    - label: Pastel Rainbow
+      value: palette-pastel-rainbow
+    - label: Custom
+      value: palette-custom
+
+- id: folder-color-custom-1
+  title: Custom Color 1
+  type: variable-color
+  format: rgb-values
+  default: "#ff6b9d"
+
+- id: folder-color-custom-2
+  title: Custom Color 2
+  type: variable-color
+  format: rgb-values
+  default: "#ff8e72"
+
+- id: folder-color-custom-3
+  title: Custom Color 3
+  type: variable-color
+  format: rgb-values
+  default: "#ffc66d"
+
+- id: folder-color-custom-4
+  title: Custom Color 4
+  type: variable-color
+  format: rgb-values
+  default: "#e5d66f"
+
+- id: folder-color-custom-5
+  title: Custom Color 5
+  type: variable-color
+  format: rgb-values
+  default: "#7ed6a5"
+
+- id: folder-color-custom-6
+  title: Custom Color 6
+  type: variable-color
+  format: rgb-values
+  default: "#65d6ce"
+
+- id: folder-color-custom-7
+  title: Custom Color 7
+  type: variable-color
+  format: rgb-values
+  default: "#72c7ff"
+
+- id: folder-color-custom-8
+  title: Custom Color 8
+  type: variable-color
+  format: rgb-values
+  default: "#8fa7ff"
+
+- id: folder-color-custom-9
+  title: Custom Color 9
+  type: variable-color
+  format: rgb-values
+  default: "#b895ff"
+
+- id: folder-color-custom-10
+  title: Custom Color 10
+  type: variable-color
+  format: rgb-values
+  default: "#e38cff"
+
+- id: mode
+  title: Display Mode
+  type: class-select
+  default: mode-background
+  options:
+    - label: Full Background
+      value: mode-background
+    - label: Accent Border
+      value: mode-border
+
+- id: inherit-colors
+  title: Inherit Parent Folder Color
+  description: All nested folders and files inherit their top-level branch color at any depth
+  type: class-toggle
+  default: false
+
+- id: folder-opacity
+  title: Color Opacity
+  type: variable-number-slider
+  default: 0.75
+  min: 0
+  max: 1
+  step: 0.01
+
+- id: font-size
+  title: File Explorer Font Size
+  type: variable-number
+  default: 14
+  format: px
+
+- id: font-family
+  title: File Explorer Font Family
+  type: variable-text
+  default: inherit
+
+- id: text-color-dark
+  title: File Explorer Text Color (Dark Mode)
+  type: variable-color
+  default: "#ffffff"
+  format: hex
+
+- id: text-color-light
+  title: File Explorer Text Color (Light Mode)
+  type: variable-color
+  default: "#000000"
+  format: hex
+
+- id: folder-icon
+  title: Folder Icon
+  description: Replaces the expand/collapse arrow for every folder
+  type: class-select
+  default: folder-icon-folder
+  options:
+    - label: Theme Default Arrow
+      value: folder-icon-default
+    - label: Folder
+      value: folder-icon-folder
+    - label: Folder Open
+      value: folder-icon-folder-open
+    - label: Archive
+      value: folder-icon-archive
+    - label: Star
+      value: folder-icon-star
+    - label: Heart
+      value: folder-icon-heart
+    - label: Book
+      value: folder-icon-book
+    - label: Notebook
+      value: folder-icon-notebook
+    - label: Briefcase
+      value: folder-icon-briefcase
+    - label: Home
+      value: folder-icon-home
+    - label: Calendar
+      value: folder-icon-calendar
+    - label: Clock
+      value: folder-icon-clock
+    - label: Tag
+      value: folder-icon-tag
+    - label: Bookmark
+      value: folder-icon-bookmark
+    - label: Box
+      value: folder-icon-box
+    - label: Database
+      value: folder-icon-database
+    - label: Code
+      value: folder-icon-code
+    - label: Terminal
+      value: folder-icon-terminal
+    - label: Settings
+      value: folder-icon-settings
+    - label: Sparkles
+      value: folder-icon-sparkles
+    - label: Flame
+      value: folder-icon-flame
+    - label: Zap
+      value: folder-icon-zap
+    - label: Rocket
+      value: folder-icon-rocket
+    - label: Camera
+      value: folder-icon-camera
+    - label: Image
+      value: folder-icon-image
+    - label: Globe
+      value: folder-icon-globe
+    - label: Users
+      value: folder-icon-users
+    - label: User
+      value: folder-icon-user
+    - label: File
+      value: folder-icon-file
+    - label: List
+      value: folder-icon-list
+    - label: Check Square
+      value: folder-icon-check-square
+
+- id: folder-icon-color-mode
+  title: Folder Icon Color
+  description: Match each folder color or use one custom icon color
+  type: class-select
+  default: icon-colorful
+  options:
+    - label: Match Folder Colors
+      value: icon-colorful
+    - label: Custom Color
+      value: icon-custom-color
+
+- id: folder-icon-color
+  title: Custom Folder Icon Color
+  type: variable-color
+  format: rgb-values
+  default: "#d8d8d8"
+
+- id: folder-icon-opacity
+  title: Folder Icon Opacity
+  type: variable-number-slider
+  default: 1
+  min: 0
+  max: 1
+  step: 0.01
+
+- id: folder-icon-size
+  title: Folder Icon Size
+  type: variable-number-slider
+  default: 16
+  min: 10
+  max: 28
+  step: 1
+  format: px
+*/
+
+
+/* =========================================================
+   BASE VARIABLES
+========================================================= */
+:root {
+  --folder-opacity: 0.75;
+  --font-size: 14px;
+  --font-family: inherit;
+  --text-color-dark: #ffffff;
+  --text-color-light: #000000;
+  --folder-icon-color: 216, 216, 216;
+  --folder-icon-opacity: 1;
+  --folder-icon-size: 16px;
+
+  --folder-color-custom-1: 255,107,157;
+  --folder-color-custom-2: 255,142,114;
+  --folder-color-custom-3: 255,198,109;
+  --folder-color-custom-4: 229,214,111;
+  --folder-color-custom-5: 126,214,165;
+  --folder-color-custom-6: 101,214,206;
+  --folder-color-custom-7: 114,199,255;
+  --folder-color-custom-8: 143,167,255;
+  --folder-color-custom-9: 184,149,255;
+  --folder-color-custom-10: 227,140,255;
+
+  --f1: 220,150,190;
+  --f2: 210,140,215;
+  --f3: 195,135,225;
+  --f4: 175,140,230;
+  --f5: 160,150,235;
+  --f6: 150,160,235;
+  --f7: 170,145,230;
+  --f8: 185,140,220;
+  --f9: 200,145,210;
+  --f10: 215,155,200;
+}
+
+body.theme-dark { --text-color: var(--text-color-dark); }
+body.theme-light { --text-color: var(--text-color-light); }
+
+/* =========================================================
+   BUILT-IN PALETTES
+========================================================= */
+body.palette-pink {
+  --f1: 220,150,190;
+  --f2: 210,140,215;
+  --f3: 195,135,225;
+  --f4: 175,140,230;
+  --f5: 160,150,235;
+  --f6: 150,160,235;
+  --f7: 170,145,230;
+  --f8: 185,140,220;
+  --f9: 200,145,210;
+  --f10: 215,155,200;
+}
+
+body.palette-blue {
+  --f1: 100,145,215;
+  --f2: 110,155,225;
+  --f3: 120,165,235;
+  --f4: 130,175,245;
+  --f5: 140,185,255;
+  --f6: 150,195,255;
+  --f7: 160,205,255;
+  --f8: 145,190,245;
+  --f9: 125,170,235;
+  --f10: 105,150,225;
+}
+
+body.palette-rainbow {
+  --f1: 255,80,90;
+  --f2: 255,125,65;
+  --f3: 255,170,65;
+  --f4: 245,210,70;
+  --f5: 135,215,90;
+  --f6: 60,205,145;
+  --f7: 50,195,215;
+  --f8: 70,145,255;
+  --f9: 135,105,245;
+  --f10: 210,95,220;
+}
+
+body.palette-mono {
+  --f1: 220,205,255;
+  --f2: 210,190,255;
+  --f3: 200,175,255;
+  --f4: 190,160,250;
+  --f5: 180,150,245;
+  --f6: 170,140,235;
+  --f7: 160,130,225;
+  --f8: 150,120,215;
+  --f9: 140,110,205;
+  --f10: 130,100,195;
+}
+
+body.palette-neon {
+  --f1: 0,255,200;
+  --f2: 0,220,255;
+  --f3: 60,140,255;
+  --f4: 120,0,255;
+  --f5: 200,0,255;
+  --f6: 255,0,200;
+  --f7: 255,50,120;
+  --f8: 255,170,0;
+  --f9: 255,255,0;
+  --f10: 0,255,110;
+}
+
+body.palette-forest {
+  --f1: 35,75,50;
+  --f2: 45,95,65;
+  --f3: 55,115,75;
+  --f4: 65,135,85;
+  --f5: 80,155,100;
+  --f6: 95,175,115;
+  --f7: 115,195,135;
+  --f8: 135,210,155;
+  --f9: 160,225,180;
+  --f10: 185,240,205;
+}
+
+body.palette-frost {
+  --f1: 175,240,255;
+  --f2: 145,225,255;
+  --f3: 120,210,255;
+  --f4: 105,190,250;
+  --f5: 120,175,245;
+  --f6: 145,160,245;
+  --f7: 170,155,245;
+  --f8: 195,165,250;
+  --f9: 215,185,255;
+  --f10: 235,210,255;
+}
+
+body.palette-sakura {
+  --f1: 255,225,238;
+  --f2: 255,210,232;
+  --f3: 250,195,225;
+  --f4: 245,180,218;
+  --f5: 240,165,210;
+  --f6: 235,150,202;
+  --f7: 230,140,195;
+  --f8: 240,165,210;
+  --f9: 250,190,225;
+  --f10: 255,215,238;
+}
+
+body.palette-ocean {
+  --f1: 25,65,115;
+  --f2: 25,85,135;
+  --f3: 25,105,155;
+  --f4: 30,125,175;
+  --f5: 35,145,195;
+  --f6: 45,165,210;
+  --f7: 60,185,225;
+  --f8: 80,205,235;
+  --f9: 105,220,245;
+  --f10: 135,235,255;
+}
+
+body.palette-sunset {
+  --f1: 255,90,75;
+  --f2: 255,110,80;
+  --f3: 255,130,85;
+  --f4: 255,150,95;
+  --f5: 255,175,110;
+  --f6: 250,145,145;
+  --f7: 230,120,170;
+  --f8: 205,105,185;
+  --f9: 170,95,185;
+  --f10: 135,85,175;
+}
+
+body.palette-autumn {
+  --f1: 165,60,35;
+  --f2: 185,75,40;
+  --f3: 205,95,45;
+  --f4: 220,115,50;
+  --f5: 235,140,60;
+  --f6: 225,160,65;
+  --f7: 200,150,60;
+  --f8: 170,125,50;
+  --f9: 135,95,45;
+  --f10: 105,70,40;
+}
+
+body.palette-candy {
+  --f1: 255,165,195;
+  --f2: 255,185,170;
+  --f3: 255,210,165;
+  --f4: 255,235,170;
+  --f5: 205,240,180;
+  --f6: 175,235,205;
+  --f7: 165,220,245;
+  --f8: 185,195,255;
+  --f9: 220,180,255;
+  --f10: 250,180,225;
+}
+
+body.palette-cyberpunk {
+  --f1: 255,0,120;
+  --f2: 255,60,0;
+  --f3: 255,210,0;
+  --f4: 0,255,140;
+  --f5: 0,240,255;
+  --f6: 30,130,255;
+  --f7: 110,50,255;
+  --f8: 190,0,255;
+  --f9: 255,0,200;
+  --f10: 255,50,100;
+}
+
+body.palette-earth {
+  --f1: 130,90,65;
+  --f2: 150,105,75;
+  --f3: 170,125,85;
+  --f4: 185,145,95;
+  --f5: 165,150,90;
+  --f6: 140,145,85;
+  --f7: 115,130,80;
+  --f8: 105,115,80;
+  --f9: 135,110,90;
+  --f10: 165,140,115;
+}
+
+body.palette-mint {
+  --f1: 165,245,220;
+  --f2: 150,235,210;
+  --f3: 135,225,200;
+  --f4: 120,215,190;
+  --f5: 105,205,180;
+  --f6: 90,195,170;
+  --f7: 80,180,160;
+  --f8: 100,195,170;
+  --f9: 125,215,190;
+  --f10: 150,235,210;
+}
+
+body.palette-grape {
+  --f1: 90,40,120;
+  --f2: 105,50,135;
+  --f3: 120,60,150;
+  --f4: 140,70,170;
+  --f5: 160,85,190;
+  --f6: 180,100,210;
+  --f7: 200,120,225;
+  --f8: 215,145,235;
+  --f9: 230,170,245;
+  --f10: 242,195,255;
+}
+
+body.palette-midnight {
+  --f1: 25,30,55;
+  --f2: 35,40,70;
+  --f3: 40,50,85;
+  --f4: 50,60,100;
+  --f5: 60,75,115;
+  --f6: 70,90,130;
+  --f7: 85,105,145;
+  --f8: 100,120,165;
+  --f9: 120,140,185;
+  --f10: 145,165,210;
+}
+
+body.palette-rosegold {
+  --f1: 190,130,125;
+  --f2: 200,140,130;
+  --f3: 210,150,140;
+  --f4: 220,160,150;
+  --f5: 230,170,160;
+  --f6: 235,180,165;
+  --f7: 240,190,175;
+  --f8: 245,200,185;
+  --f9: 248,210,195;
+  --f10: 250,220,205;
+}
+
+body.palette-fire {
+  --f1: 255,230,90;
+  --f2: 255,205,70;
+  --f3: 255,180,60;
+  --f4: 255,155,50;
+  --f5: 255,130,45;
+  --f6: 250,105,40;
+  --f7: 240,80,35;
+  --f8: 220,55,30;
+  --f9: 190,35,25;
+  --f10: 150,20,25;
+}
+
+body.palette-teal {
+  --f1: 130,235,225;
+  --f2: 110,225,215;
+  --f3: 90,215,205;
+  --f4: 70,205,195;
+  --f5: 55,195,185;
+  --f6: 45,180,170;
+  --f7: 40,165,160;
+  --f8: 35,150,150;
+  --f9: 45,170,165;
+  --f10: 70,195,185;
+}
+
+body.palette-lavender {
+  --f1: 235,220,255;
+  --f2: 225,205,255;
+  --f3: 215,190,250;
+  --f4: 205,175,245;
+  --f5: 195,160,240;
+  --f6: 185,150,235;
+  --f7: 175,140,225;
+  --f8: 190,155,235;
+  --f9: 210,180,245;
+  --f10: 225,205,255;
+}
+
+body.palette-peach {
+  --f1: 255,225,205;
+  --f2: 255,215,195;
+  --f3: 255,205,185;
+  --f4: 255,195,175;
+  --f5: 255,185,165;
+  --f6: 250,170,155;
+  --f7: 245,155,145;
+  --f8: 240,145,140;
+  --f9: 250,170,160;
+  --f10: 255,200,185;
+}
+
+body.palette-berry {
+  --f1: 105,40,80;
+  --f2: 120,45,90;
+  --f3: 140,50,100;
+  --f4: 160,55,110;
+  --f5: 180,65,125;
+  --f6: 200,75,140;
+  --f7: 220,90,155;
+  --f8: 225,105,170;
+  --f9: 205,95,180;
+  --f10: 175,80,180;
+}
+
+body.palette-emerald {
+  --f1: 20,90,65;
+  --f2: 25,105,70;
+  --f3: 30,120,80;
+  --f4: 35,135,90;
+  --f5: 40,150,100;
+  --f6: 50,165,110;
+  --f7: 60,180,120;
+  --f8: 75,195,135;
+  --f9: 95,210,150;
+  --f10: 120,225,170;
+}
+
+body.palette-desert {
+  --f1: 110,75,55;
+  --f2: 130,85,60;
+  --f3: 150,100,65;
+  --f4: 170,115,70;
+  --f5: 190,130,80;
+  --f6: 210,150,90;
+  --f7: 225,170,105;
+  --f8: 215,160,115;
+  --f9: 190,140,110;
+  --f10: 160,115,95;
+}
+
+body.palette-coffee {
+  --f1: 70,45,35;
+  --f2: 85,55,40;
+  --f3: 100,65,45;
+  --f4: 115,75,50;
+  --f5: 130,90,60;
+  --f6: 150,105,70;
+  --f7: 170,125,85;
+  --f8: 190,145,105;
+  --f9: 210,170,130;
+  --f10: 230,195,160;
+}
+
+body.palette-ice {
+  --f1: 220,248,255;
+  --f2: 205,242,255;
+  --f3: 190,235,255;
+  --f4: 175,228,255;
+  --f5: 160,220,255;
+  --f6: 145,210,250;
+  --f7: 130,200,245;
+  --f8: 145,210,250;
+  --f9: 170,225,255;
+  --f10: 200,240,255;
+}
+
+body.palette-vaporwave {
+  --f1: 255,90,220;
+  --f2: 245,95,240;
+  --f3: 225,95,255;
+  --f4: 190,100,255;
+  --f5: 150,110,255;
+  --f6: 100,135,255;
+  --f7: 65,175,255;
+  --f8: 50,210,240;
+  --f9: 70,235,215;
+  --f10: 255,130,205;
+}
+
+body.palette-solarized {
+  --f1: 181,137,0;
+  --f2: 203,75,22;
+  --f3: 220,50,47;
+  --f4: 211,54,130;
+  --f5: 108,113,196;
+  --f6: 38,139,210;
+  --f7: 42,161,152;
+  --f8: 133,153,0;
+  --f9: 88,110,117;
+  --f10: 147,161,161;
+}
+
+body.palette-slate {
+  --f1: 70,80,100;
+  --f2: 80,90,110;
+  --f3: 90,100,120;
+  --f4: 100,110,130;
+  --f5: 110,120,140;
+  --f6: 120,130,150;
+  --f7: 130,140,160;
+  --f8: 145,155,175;
+  --f9: 160,170,190;
+  --f10: 180,190,210;
+}
+
+body.palette-pastel-rainbow {
+  --f1: 255,180,190;
+  --f2: 255,195,175;
+  --f3: 255,215,170;
+  --f4: 250,235,175;
+  --f5: 205,240,190;
+  --f6: 180,235,210;
+  --f7: 175,225,240;
+  --f8: 185,205,250;
+  --f9: 205,190,250;
+  --f10: 240,185,230;
+}
+
+/* =========================================================
+   CUSTOM PALETTE
+========================================================= */
+body.palette-custom {
+  --f1: var(--folder-color-custom-1);
+  --f2: var(--folder-color-custom-2);
+  --f3: var(--folder-color-custom-3);
+  --f4: var(--folder-color-custom-4);
+  --f5: var(--folder-color-custom-5);
+  --f6: var(--folder-color-custom-6);
+  --f7: var(--folder-color-custom-7);
+  --f8: var(--folder-color-custom-8);
+  --f9: var(--folder-color-custom-9);
+  --f10: var(--folder-color-custom-10);
+}
+
+/* Hide custom palette pickers until Custom is selected. */
+body:not(.palette-custom) .setting-item[data-id^="folder-color-custom-"] {
+  display: none !important;
+}
+
+/* Hide the custom icon color picker unless Custom Color is selected. */
+body:not(.icon-custom-color) .setting-item[data-id="folder-icon-color"] {
+  display: none !important;
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+.nav-file-title,
+.nav-folder-title {
+  font-size: var(--font-size);
+  font-family: var(--font-family);
+  color: var(--text-color);
+  border-radius: 8px;
+}
+
+/* =========================================================
+   10-COLOR REPEATING SYSTEM
+========================================================= */
+.nav-folder,
+.nav-file { --fc: var(--f1); }
+
+.nav-folder:nth-child(10n + 1), .nav-file:nth-child(10n + 1) { --fc: var(--f1); }
+.nav-folder:nth-child(10n + 2), .nav-file:nth-child(10n + 2) { --fc: var(--f2); }
+.nav-folder:nth-child(10n + 3), .nav-file:nth-child(10n + 3) { --fc: var(--f3); }
+.nav-folder:nth-child(10n + 4), .nav-file:nth-child(10n + 4) { --fc: var(--f4); }
+.nav-folder:nth-child(10n + 5), .nav-file:nth-child(10n + 5) { --fc: var(--f5); }
+.nav-folder:nth-child(10n + 6), .nav-file:nth-child(10n + 6) { --fc: var(--f6); }
+.nav-folder:nth-child(10n + 7), .nav-file:nth-child(10n + 7) { --fc: var(--f7); }
+.nav-folder:nth-child(10n + 8), .nav-file:nth-child(10n + 8) { --fc: var(--f8); }
+.nav-folder:nth-child(10n + 9), .nav-file:nth-child(10n + 9) { --fc: var(--f9); }
+.nav-folder:nth-child(10n + 10), .nav-file:nth-child(10n + 10) { --fc: var(--f10); }
+
+/* =========================================================
+   UNLIMITED-DEPTH INHERITANCE
+========================================================= */
+body.inherit-colors .nav-folder .nav-folder,
+body.inherit-colors .nav-folder .nav-file {
+  --fc: inherit !important;
+}
+
+/* =========================================================
+   DISPLAY MODES
+========================================================= */
+/* Default styling also works when Style Settings is not installed. */
+.nav-folder-title,
+.nav-file-title,
+body.mode-background .nav-folder-title,
+body.mode-background .nav-file-title {
+  background-color: rgba(var(--fc), var(--folder-opacity));
+}
+
+body.mode-border .nav-folder-title,
+body.mode-border .nav-file-title {
+  background: transparent !important;
+  border-left: 4px solid rgba(var(--fc), var(--folder-opacity));
+}
+
+/* =========================================================
+   FOLDER ICON SYSTEM
+   Current Obsidian uses .collapse-icon. Older/theme variants can
+   still expose .nav-folder-collapse-indicator, so both are supported.
+========================================================= */
+
+/* Theme-default arrow: color/opacity/size only. */
+body.folder-icon-default .nav-folder-title > .collapse-icon,
+body.folder-icon-default .nav-folder-title > .nav-folder-collapse-indicator {
+  opacity: var(--folder-icon-opacity) !important;
+}
+
+body.folder-icon-default .nav-folder-title > .collapse-icon svg,
+body.folder-icon-default .nav-folder-title > .nav-folder-collapse-indicator svg {
+  width: var(--folder-icon-size) !important;
+  height: var(--folder-icon-size) !important;
+}
+
+body.folder-icon-default.icon-colorful .nav-folder-title > .collapse-icon svg,
+body.folder-icon-default.icon-colorful .nav-folder-title > .nav-folder-collapse-indicator svg {
+  color: rgb(var(--fc)) !important;
+  stroke: rgb(var(--fc)) !important;
+}
+
+body.folder-icon-default.icon-custom-color .nav-folder-title > .collapse-icon svg,
+body.folder-icon-default.icon-custom-color .nav-folder-title > .nav-folder-collapse-indicator svg {
+  color: rgb(var(--folder-icon-color)) !important;
+  stroke: rgb(var(--folder-icon-color)) !important;
+}
+
+/* Only activate replacement mode when a folder-icon-* class is actually present. */
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .collapse-icon,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .nav-folder-collapse-indicator {
+  width: max(18px, var(--folder-icon-size)) !important;
+  min-width: max(18px, var(--folder-icon-size)) !important;
+  height: max(18px, var(--folder-icon-size)) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* Hide the actual chevron. */
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .collapse-icon > svg,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .collapse-icon .svg-icon,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .nav-folder-collapse-indicator > svg,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .nav-folder-collapse-indicator .svg-icon {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Draw the selected icon exactly where the chevron was. */
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .collapse-icon::before,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .nav-folder-collapse-indicator::before {
+  content: "" !important;
+  display: block !important;
+  width: var(--folder-icon-size) !important;
+  height: var(--folder-icon-size) !important;
+  flex: 0 0 var(--folder-icon-size) !important;
+  background-color: rgb(var(--fc)) !important;
+  opacity: var(--folder-icon-opacity) !important;
+  -webkit-mask-image: var(--folder-icon-mask) !important;
+  mask-image: var(--folder-icon-mask) !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  -webkit-mask-size: contain !important;
+  mask-size: contain !important;
+}
+
+body.icon-custom-color[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .collapse-icon::before,
+body.icon-custom-color[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title > .nav-folder-collapse-indicator::before {
+  background-color: rgb(var(--folder-icon-color)) !important;
+}
+
+/* Prevent themes from rotating the custom icon as if it were a chevron. */
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder.is-collapsed > .nav-folder-title > .collapse-icon,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder:not(.is-collapsed) > .nav-folder-title > .collapse-icon,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder.is-collapsed > .nav-folder-title > .nav-folder-collapse-indicator,
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder:not(.is-collapsed) > .nav-folder-title > .nav-folder-collapse-indicator {
+  transform: none !important;
+}
+
+/* Some themes add a second folder glyph with ::before. Remove it only in replacement mode. */
+body[class*="folder-icon-"]:not(.folder-icon-default) .nav-folder-title::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* =========================================================
+   LUCIDE MASK DEFINITIONS
+========================================================= */
+
+body.folder-icon-folder { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20%2020a2%202%200%200%200%202-2V8a2%202%200%200%200-2-2h-7.9a2%202%200%200%201-1.69-.9L9.6%203.9A2%202%200%200%200%207.93%203H4a2%202%200%200%200-2%202v13a2%202%200%200%200%202%202Z'/%3E%3C/svg%3E"); }
+body.folder-icon-folder-open { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m6%2014%201.5-2.9A2%202%200%200%201%209.24%2010H20a2%202%200%200%201%201.94%202.5l-1.54%206a2%202%200%200%201-1.95%201.5H4a2%202%200%200%201-2-2V5a2%202%200%200%201%202-2h3.9a2%202%200%200%201%201.69.9l.81%201.2a2%202%200%200%200%201.67.9H18a2%202%200%200%201%202%202v2'/%3E%3C/svg%3E"); }
+body.folder-icon-archive { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20width='20'%20height='5'%20x='2'%20y='3'%20rx='1'/%3E%3Cpath%20d='M4%208v11a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V8'/%3E%3Cpath%20d='M10%2012h4'/%3E%3C/svg%3E"); }
+body.folder-icon-star { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%202%203.09%206.26L22%209.27l-5%204.87%201.18%206.88L12%2017.77l-6.18%203.25L7%2014.14%202%209.27l6.91-1.01Z'/%3E%3C/svg%3E"); }
+body.folder-icon-heart { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20.84%204.61a5.5%205.5%200%200%200-7.78%200L12%205.67l-1.06-1.06a5.5%205.5%200%200%200-7.78%207.78L12%2021.23l8.84-8.84a5.5%205.5%200%200%200%200-7.78z'/%3E%3C/svg%3E"); }
+body.folder-icon-book { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4%2019.5A2.5%202.5%200%200%201%206.5%2017H20'/%3E%3Cpath%20d='M6.5%202H20v20H6.5A2.5%202.5%200%200%201%204%2019.5v-15A2.5%202.5%200%200%201%206.5%202z'/%3E%3C/svg%3E"); }
+body.folder-icon-notebook { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M2%206h4'/%3E%3Cpath%20d='M2%2010h4'/%3E%3Cpath%20d='M2%2014h4'/%3E%3Cpath%20d='M2%2018h4'/%3E%3Crect%20width='16'%20height='20'%20x='4'%20y='2'%20rx='2'/%3E%3Cpath%20d='M16%202v20'/%3E%3C/svg%3E"); }
+body.folder-icon-briefcase { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20width='20'%20height='14'%20x='2'%20y='7'%20rx='2'/%3E%3Cpath%20d='M16%2021V5a2%202%200%200%200-2-2h-4a2%202%200%200%200-2%202v16'/%3E%3C/svg%3E"); }
+body.folder-icon-home { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m3%2011%209-8%209%208'/%3E%3Cpath%20d='M5%2010v10h14V10'/%3E%3Cpath%20d='M9%2020v-6h6v6'/%3E%3C/svg%3E"); }
+body.folder-icon-calendar { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M8%202v4'/%3E%3Cpath%20d='M16%202v4'/%3E%3Crect%20width='18'%20height='18'%20x='3'%20y='4'%20rx='2'/%3E%3Cpath%20d='M3%2010h18'/%3E%3C/svg%3E"); }
+body.folder-icon-clock { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='10'/%3E%3Cpolyline%20points='12%206%2012%2012%2016%2014'/%3E%3C/svg%3E"); }
+body.folder-icon-tag { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12.586%202.586A2%202%200%200%200%2011.172%202H4a2%202%200%200%200-2%202v7.172a2%202%200%200%200%20.586%201.414l8.704%208.704a2.426%202.426%200%200%200%203.42%200l6.58-6.58a2.426%202.426%200%200%200%200-3.42z'/%3E%3Ccircle%20cx='7.5'%20cy='7.5'%20r='.5'/%3E%3C/svg%3E"); }
+body.folder-icon-bookmark { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2021l-7-5-7%205V5a2%202%200%200%201%202-2h10a2%202%200%200%201%202%202z'/%3E%3C/svg%3E"); }
+body.folder-icon-box { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M21%208a2%202%200%200%200-1-1.73l-7-4a2%202%200%200%200-2%200l-7%204A2%202%200%200%200%203%208v8a2%202%200%200%200%201%201.73l7%204a2%202%200%200%200%202%200l7-4A2%202%200%200%200%2021%2016Z'/%3E%3Cpath%20d='m3.3%207%208.7%205%208.7-5'/%3E%3Cpath%20d='M12%2022V12'/%3E%3C/svg%3E"); }
+body.folder-icon-database { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cellipse%20cx='12'%20cy='5'%20rx='9'%20ry='3'/%3E%3Cpath%20d='M3%205v14c0%201.7%204%203%209%203s9-1.3%209-3V5'/%3E%3Cpath%20d='M3%2012c0%201.7%204%203%209%203s9-1.3%209-3'/%3E%3C/svg%3E"); }
+body.folder-icon-code { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolyline%20points='16%2018%2022%2012%2016%206'/%3E%3Cpolyline%20points='8%206%202%2012%208%2018'/%3E%3C/svg%3E"); }
+body.folder-icon-terminal { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolyline%20points='4%2017%2010%2011%204%205'/%3E%3Cline%20x1='12'%20x2='20'%20y1='19'%20y2='19'/%3E%3C/svg%3E"); }
+body.folder-icon-settings { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12.22%202h-.44a2%202%200%200%200-2%202v.18a2%202%200%200%201-1%201.73l-.43.25a2%202%200%200%201-2%200l-.15-.08a2%202%200%200%200-2.73.73l-.22.38a2%202%200%200%200%20.73%202.73l.15.1a2%202%200%200%201%201%201.72v.51a2%202%200%200%201-1%201.74l-.15.09a2%202%200%200%200-.73%202.73l.22.38a2%202%200%200%200%202.73.73l.15-.08a2%202%200%200%201%202%200l.43.25a2%202%200%200%201%201%201.73V20a2%202%200%200%200%202%202h.44a2%202%200%200%200%202-2v-.18a2%202%200%200%201%201-1.73l.43-.25a2%202%200%200%201%202%200l.15.08a2%202%200%200%200%202.73-.73l.22-.38a2%202%200%200%200-.73-2.73l-.15-.09a2%202%200%200%201-1-1.74v-.51a2%202%200%200%201%201-1.74l.15-.09a2%202%200%200%200%20.73-2.73l-.22-.38a2%202%200%200%200-2.73-.73l-.15.08a2%202%200%200%201-2%200l-.43-.25a2%202%200%200%201-1-1.73V4a2%202%200%200%200-2-2z'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='3'/%3E%3C/svg%3E"); }
+body.folder-icon-sparkles { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%203-1.9%205.8a2%202%200%200%201-1.3%201.3L3%2012l5.8%201.9a2%202%200%200%201%201.3%201.3L12%2021l1.9-5.8a2%202%200%200%201%201.3-1.3L21%2012l-5.8-1.9a2%202%200%200%201-1.3-1.3Z'/%3E%3Cpath%20d='M5%203v4'/%3E%3Cpath%20d='M3%205h4'/%3E%3Cpath%20d='M19%2017v4'/%3E%3Cpath%20d='M17%2019h4'/%3E%3C/svg%3E"); }
+body.folder-icon-flame { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%2022c4.97%200%209-3.58%209-8%200-2.5-1-4.5-3-6.5.1%202.5-1.4%204-3%204.5.4-3.5-1.6-7-5-10-1%205-4%207-4%2012%200%204.42%202.69%208%206%208Z'/%3E%3C/svg%3E"); }
+body.folder-icon-zap { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M13%202%203%2014h9l-1%208%2010-12h-9z'/%3E%3C/svg%3E"); }
+body.folder-icon-rocket { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4.5%2016.5c-1.5%201.26-2%205-2%205s3.74-.5%205-2c.71-.84.7-2.13-.09-2.91a2.18%202.18%200%200%200-2.91-.09z'/%3E%3Cpath%20d='m12%2015-3-3a22%2022%200%200%201%202-3.95A12.87%2012.87%200%200%201%2022%202c0%202.72-.78%207.5-6.05%2011a22.4%2022.4%200%200%201-3.95%202z'/%3E%3C/svg%3E"); }
+body.folder-icon-camera { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14.5%204h-5L7%207H4a2%202%200%200%200-2%202v9a2%202%200%200%200%202%202h16a2%202%200%200%200%202-2V9a2%202%200%200%200-2-2h-3z'/%3E%3Ccircle%20cx='12'%20cy='13'%20r='3'/%3E%3C/svg%3E"); }
+body.folder-icon-image { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20width='18'%20height='18'%20x='3'%20y='3'%20rx='2'/%3E%3Ccircle%20cx='9'%20cy='9'%20r='2'/%3E%3Cpath%20d='m21%2015-5-5L5%2021'/%3E%3C/svg%3E"); }
+body.folder-icon-globe { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='10'/%3E%3Cline%20x1='2'%20x2='22'%20y1='12'%20y2='12'/%3E%3Cpath%20d='M12%202a15.3%2015.3%200%200%201%204%2010%2015.3%2015.3%200%200%201-4%2010%2015.3%2015.3%200%200%201-4-10%2015.3%2015.3%200%200%201%204-10z'/%3E%3C/svg%3E"); }
+body.folder-icon-users { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M16%2021v-2a4%204%200%200%200-4-4H6a4%204%200%200%200-4%204v2'/%3E%3Ccircle%20cx='9'%20cy='7'%20r='4'/%3E%3Cpath%20d='M22%2021v-2a4%204%200%200%200-3-3.87'/%3E%3Cpath%20d='M16%203.13a4%204%200%200%201%200%207.75'/%3E%3C/svg%3E"); }
+body.folder-icon-user { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2021v-2a4%204%200%200%200-4-4H9a4%204%200%200%200-4%204v2'/%3E%3Ccircle%20cx='12'%20cy='7'%20r='4'/%3E%3C/svg%3E"); }
+body.folder-icon-file { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14%202H6a2%202%200%200%200-2%202v16a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V8z'/%3E%3Cpolyline%20points='14%202%2014%208%2020%208'/%3E%3C/svg%3E"); }
+body.folder-icon-list { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cline%20x1='8'%20x2='21'%20y1='6'%20y2='6'/%3E%3Cline%20x1='8'%20x2='21'%20y1='12'%20y2='12'/%3E%3Cline%20x1='8'%20x2='21'%20y1='18'%20y2='18'/%3E%3Cline%20x1='3'%20x2='3.01'%20y1='6'%20y2='6'/%3E%3Cline%20x1='3'%20x2='3.01'%20y1='12'%20y2='12'/%3E%3Cline%20x1='3'%20x2='3.01'%20y1='18'%20y2='18'/%3E%3C/svg%3E"); }
+body.folder-icon-check-square { --folder-icon-mask: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolyline%20points='9%2011%2012%2014%2022%204'/%3E%3Cpath%20d='M21%2012v7a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V5a2%202%200%200%201%202-2h11'/%3E%3C/svg%3E"); }
+
+
+/* =========================================================
+   ACTIVE FILE
+========================================================= */
+.nav-file-title.is-active {
+  background: rgba(255,255,255,0.15);
+  font-weight: 700;
+}
