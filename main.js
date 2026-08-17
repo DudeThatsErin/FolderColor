@@ -1,6 +1,6 @@
-const { Plugin, PluginSettingTab, Setting } = require('obsidian');
+const { Plugin, PluginSettingTab, Setting, setIcon } = require('obsidian');
 
-const VERSION = '1.3.1';
+const VERSION = '1.3.2';
 
 const PALETTE_OPTIONS = [
   ['palette-pink', 'Pink / Purple'],
@@ -319,20 +319,49 @@ function clampNumber(value, min, max) {
   return Math.min(max, Math.max(min, n));
 }
 
+function iconNameFromSetting(value) {
+  if (!value || value === 'folder-icon-default' || value === 'folder-open-icon-same') return null;
+  let name = value
+    .replace(/^folder-open-icon-/, '')
+    .replace(/^folder-icon-/, '')
+    .replace(/^file-icon-/, '')
+    .replace(/^active-icon-/, '');
+
+  // Lucide renamed this icon; Obsidian exposes the current Lucide name.
+  if (name === 'check-square') name = 'square-check';
+  return name;
+}
+
 module.exports = class FolderColorSystemPlugin extends Plugin {
   async onload() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    document.body.classList.add('folder-color-system-active');
     this.applySettings();
     this.addSettingTab(new FolderColorSystemSettingTab(this.app, this));
+
+    this.iconRefreshQueued = false;
+    this.iconObserver = new MutationObserver(() => this.scheduleIconRefresh());
+    this.iconObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    this.register(() => this.iconObserver?.disconnect());
+    this.scheduleIconRefresh();
   }
 
   onunload() {
+    this.iconObserver?.disconnect();
+    this.removeInjectedIcons();
+    document.body.classList.remove('folder-color-system-active');
     this.clearAppliedSettings();
   }
 
   async saveSettings() {
     await this.saveData(this.settings);
     this.applySettings();
+    this.scheduleIconRefresh();
   }
 
   clearAppliedSettings() {
@@ -352,6 +381,109 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
   setVar(name, value) {
     document.body.style.setProperty(name, value);
     document.documentElement.style.setProperty(name, value);
+  }
+
+  scheduleIconRefresh() {
+    if (this.iconRefreshQueued) return;
+    this.iconRefreshQueued = true;
+    requestAnimationFrame(() => {
+      this.iconRefreshQueued = false;
+      this.refreshExplorerIcons();
+    });
+  }
+
+  setInjectedIcon(container, className, iconName, fallback) {
+    if (!container || !iconName) return null;
+    let iconEl = container.querySelector(`.${className}`);
+    if (!iconEl) {
+      iconEl = document.createElement('span');
+      iconEl.className = className;
+      iconEl.setAttribute('aria-hidden', 'true');
+      container.prepend(iconEl);
+    }
+    if (iconEl.dataset.fcsIcon !== iconName) {
+      iconEl.empty?.();
+      if (!iconEl.empty) iconEl.replaceChildren();
+      try {
+        setIcon(iconEl, iconName);
+        iconEl.dataset.fcsIcon = iconName;
+      } catch (error) {
+        iconEl.replaceChildren();
+        try {
+          setIcon(iconEl, fallback);
+          iconEl.dataset.fcsIcon = fallback;
+        } catch (_) {
+          iconEl.remove();
+          return null;
+        }
+      }
+    }
+    return iconEl;
+  }
+
+  refreshExplorerIcons() {
+    const s = Object.assign({}, DEFAULT_SETTINGS, this.settings || {});
+    const explorer = document.querySelector('.workspace-leaf-content[data-type="file-explorer"]');
+    if (!explorer) return;
+
+    explorer.querySelectorAll('.nav-folder').forEach(folder => {
+      const title = folder.querySelector(':scope > .nav-folder-title');
+      if (!title) return;
+      const collapse = title.querySelector(':scope > .collapse-icon, :scope > .nav-folder-collapse-indicator');
+      if (!collapse) return;
+
+      const isCollapsed = folder.classList.contains('is-collapsed');
+      let settingValue;
+      if (isCollapsed) {
+        settingValue = s.folderIcon;
+      } else if (s.folderOpenIcon && s.folderOpenIcon !== 'folder-open-icon-same') {
+        settingValue = s.folderOpenIcon;
+      } else {
+        settingValue = s.folderIcon;
+      }
+
+      const iconName = iconNameFromSetting(settingValue);
+      const existing = collapse.querySelector('.fcs-folder-icon');
+      if (!iconName) {
+        existing?.remove();
+        collapse.classList.remove('fcs-has-custom-icon');
+        return;
+      }
+
+      const iconEl = this.setInjectedIcon(collapse, 'fcs-folder-icon', iconName, 'folder');
+      if (iconEl) collapse.classList.add('fcs-has-custom-icon');
+    });
+
+    explorer.querySelectorAll('.nav-file-title').forEach(title => {
+      const content = title.querySelector('.nav-file-title-content');
+      if (!content) return;
+      const isActive = title.classList.contains('is-active');
+      const useActive = isActive && s.activeShowIcon;
+      const useRegular = s.showFileIcons;
+      const existing = content.querySelector('.fcs-file-icon');
+
+      if (!useActive && !useRegular) {
+        existing?.remove();
+        content.classList.remove('fcs-has-file-icon');
+        return;
+      }
+
+      const settingValue = useActive ? s.activeIcon : s.fileIcon;
+      const iconName = iconNameFromSetting(settingValue) || 'file';
+      const iconEl = this.setInjectedIcon(content, 'fcs-file-icon', iconName, 'file');
+      if (!iconEl) {
+        content.classList.remove('fcs-has-file-icon');
+        return;
+      }
+      content.classList.add('fcs-has-file-icon');
+      iconEl.classList.toggle('fcs-active-icon', useActive);
+    });
+  }
+
+  removeInjectedIcons() {
+    document.querySelectorAll('.fcs-folder-icon, .fcs-file-icon').forEach(el => el.remove());
+    document.querySelectorAll('.fcs-has-custom-icon').forEach(el => el.classList.remove('fcs-has-custom-icon'));
+    document.querySelectorAll('.fcs-has-file-icon').forEach(el => el.classList.remove('fcs-has-file-icon'));
   }
 
   applySettings() {

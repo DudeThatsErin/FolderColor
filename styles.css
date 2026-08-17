@@ -818,7 +818,7 @@ body.folder-color-system-active
 
 /* File icons. */
 body.folder-color-system-active
-.workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content:has(> .fcs-file-icon) {
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content.fcs-has-file-icon {
   display: inline-flex;
   align-items: center;
 }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.3
+
+- Removed the `:has()` selector from file icon styling to avoid broad selector invalidation and Obsidian CSS lint warnings.
+- File icon containers now receive an explicit `fcs-has-file-icon` class from the plugin instead.
+
 ## 1.3.2
 
 - Removed all `!important` declarations from `styles.css`.
