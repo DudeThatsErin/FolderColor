@@ -2,7 +2,7 @@
 
 A lightweight Obsidian community plugin that styles the File Explorer with configurable folder/file colors, recursive color inheritance, multiple palettes, custom 10-color palettes, and replacement folder icons.
 
-The plugin intentionally keeps its own settings page minimal. All customization is exposed through the **Style Settings** community plugin.
+Style Settings plugin is unnecessary and all settings are built into the plugin.
 
 ## Features
 
