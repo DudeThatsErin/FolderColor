@@ -1,3 +1,12 @@
+# Changelog
+
+## 1.3.2
+
+- Removed all `!important` declarations from `styles.css`.
+- Replaced CSS mask-based icons with Obsidian's built-in `setIcon()` API.
+- Removed CSS mask and clip-path usage to satisfy Obsidian CSS compatibility linting.
+- Folder, file, and active-file icons now use real Lucide SVG elements and retain color, opacity, and size customization.
+
 ## 1.3.1
 
 - Fixed iPad/iOS settings controls jumping back to the top after changing dropdowns or conditional options.

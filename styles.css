@@ -519,7 +519,7 @@ body.palette-custom {
   color: var(--text-color);
   position: relative;
   box-sizing: border-box;
-  border-radius: var(--left-border-radius) var(--right-border-radius) var(--right-border-radius) var(--left-border-radius) !important;
+  border-radius: var(--left-border-radius) var(--right-border-radius) var(--right-border-radius) var(--left-border-radius);
   border: 0 solid transparent;
 }
 
@@ -545,7 +545,7 @@ body.palette-custom {
 
 /* Unlimited-depth inheritance. */
 body.inherit-colors .nav-folder .nav-folder,
-body.inherit-colors .nav-folder .nav-file { --fc: inherit !important; }
+body.inherit-colors .nav-folder .nav-file { --fc: inherit; }
 
 body.background-custom-color .nav-folder,
 body.background-custom-color .nav-file { --row-bg-color: var(--background-custom-color-value); }
@@ -557,46 +557,46 @@ body.border-custom-color .nav-file { --row-border-color: var(--border-custom-col
 ========================================================= */
 
 /*
-   Start from a completely neutral row. This is intentionally !important
+   Start from a completely neutral row. This is intentionally
    because many themes put their own background/border rules on nav rows.
    Each appearance mode below then opts back into exactly what the user chose.
 */
 .nav-folder-title,
 .nav-file-title {
-  background-color: transparent !important;
-  border: 0 none transparent !important;
+  background-color: transparent;
+  border: 0 none transparent;
 }
 
 /* Background Only */
 body.appearance-background .nav-folder-title,
 body.appearance-background .nav-file-title {
-  background-color: rgba(var(--row-bg-color), var(--background-opacity)) !important;
-  border: 0 none transparent !important;
+  background-color: rgba(var(--row-bg-color), var(--background-opacity));
+  border: 0 none transparent;
 }
 
 /* Borders Only: force the old background fully off. */
 body.appearance-border .nav-folder-title,
 body.appearance-border .nav-file-title {
-  background: transparent !important;
-  background-color: transparent !important;
-  border: 0 none transparent !important;
+  background: transparent;
+  background-color: transparent;
+  border: 0 none transparent;
 }
 
 /* Background + Borders */
 body.appearance-both .nav-folder-title,
 body.appearance-both .nav-file-title {
-  background-color: rgba(var(--row-bg-color), var(--background-opacity)) !important;
-  border: 0 none transparent !important;
+  background-color: rgba(var(--row-bg-color), var(--background-opacity));
+  border: 0 none transparent;
 }
 
 /* None */
 body.appearance-none .nav-folder-title,
 body.appearance-none .nav-file-title {
-  background: transparent !important;
-  background-color: transparent !important;
-  border: 0 none transparent !important;
-  box-shadow: none !important;
-  outline: none !important;
+  background: transparent;
+  background-color: transparent;
+  border: 0 none transparent;
+  box-shadow: none;
+  outline: none;
 }
 
 body.border-solid { --border-line-style: solid; }
@@ -606,48 +606,48 @@ body.border-double { --border-line-style: double; }
 
 /*
    Use side-specific SHORTHANDS rather than separate width/style/color
-   declarations. This beats themes that reset `border` with !important and
+   declarations. This beats themes that reset `border` with and
    makes the enabled sides reliable after switching appearance modes.
 */
 body:is(.appearance-border,.appearance-both).show-left-border .nav-folder-title,
 body:is(.appearance-border,.appearance-both).show-left-border .nav-file-title {
-  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
 
 body:is(.appearance-border,.appearance-both).right-border .nav-folder-title,
 body:is(.appearance-border,.appearance-both).right-border .nav-file-title {
-  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
 
 body:is(.appearance-border,.appearance-both).show-top-border .nav-folder-title,
 body:is(.appearance-border,.appearance-both).show-top-border .nav-file-title {
-  border-top: var(--top-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+  border-top: var(--top-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
 
 body:is(.appearance-border,.appearance-both).show-bottom-border .nav-folder-title,
 body:is(.appearance-border,.appearance-both).show-bottom-border .nav-file-title {
-  border-bottom: var(--bottom-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+  border-bottom: var(--bottom-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
 
 /* Explicitly keep every disabled side at zero. */
 body:is(.appearance-border,.appearance-both):not(.show-left-border) .nav-folder-title,
 body:is(.appearance-border,.appearance-both):not(.show-left-border) .nav-file-title {
-  border-left: 0 none transparent !important;
+  border-left: 0 none transparent;
 }
 
 body:is(.appearance-border,.appearance-both):not(.right-border) .nav-folder-title,
 body:is(.appearance-border,.appearance-both):not(.right-border) .nav-file-title {
-  border-right: 0 none transparent !important;
+  border-right: 0 none transparent;
 }
 
 body:is(.appearance-border,.appearance-both):not(.show-top-border) .nav-folder-title,
 body:is(.appearance-border,.appearance-both):not(.show-top-border) .nav-file-title {
-  border-top: 0 none transparent !important;
+  border-top: 0 none transparent;
 }
 
 body:is(.appearance-border,.appearance-both):not(.show-bottom-border) .nav-folder-title,
 body:is(.appearance-border,.appearance-both):not(.show-bottom-border) .nav-file-title {
-  border-bottom: 0 none transparent !important;
+  border-bottom: 0 none transparent;
 }
 
 /*
@@ -657,32 +657,32 @@ body:is(.appearance-border,.appearance-both):not(.show-bottom-border) .nav-file-
 */
 body:not(.right-dot) .nav-folder-title::after,
 body:not(.right-dot) .nav-file-title::after {
-  content: none !important;
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  border: 0 none transparent !important;
-  background: none !important;
-  box-shadow: none !important;
-  outline: none !important;
+  content: none;
+  display: none;
+  width: 0;
+  height: 0;
+  border: 0 none transparent;
+  background: none;
+  box-shadow: none;
+  outline: none;
 }
 
 /* Right-side dot works with background, borders, both, or none. */
 body.right-dot .nav-folder-title::after,
 body.right-dot .nav-file-title::after {
-  content: "" !important;
-  display: block !important;
-  position: absolute !important;
-  right: var(--right-dot-offset) !important;
-  top: 50% !important;
-  width: var(--right-dot-size) !important;
-  height: var(--right-dot-size) !important;
-  border: 0 none transparent !important;
-  border-radius: 999px !important;
-  transform: translateY(-50%) !important;
-  background: rgba(var(--row-border-color), var(--border-opacity)) !important;
-  box-shadow: none !important;
-  pointer-events: none !important;
+  content: "";
+  display: block;
+  position: absolute;
+  right: var(--right-dot-offset);
+  top: 50%;
+  width: var(--right-dot-size);
+  height: var(--right-dot-size);
+  border: 0 none transparent;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: rgba(var(--row-border-color), var(--border-opacity));
+  box-shadow: none;
+  pointer-events: none;
 }
 
 /* =========================================================
@@ -700,11 +700,11 @@ body.right-none .workspace-leaf-content[data-type="file-explorer"] :is(
   .nav-folder-title-content,
   .nav-file-title-content
 ) {
-  border-right-width: 0 !important;
-  border-right-style: none !important;
-  border-right-color: transparent !important;
-  border-right: 0 none transparent !important;
-  outline-right: 0 !important;
+  border-right-width: 0;
+  border-right-style: none;
+  border-right-color: transparent;
+  border-right: 0 none transparent;
+  outline-right: 0;
 }
 
 body.right-none .workspace-leaf-content[data-type="file-explorer"] :is(
@@ -715,25 +715,22 @@ body.right-none .workspace-leaf-content[data-type="file-explorer"] :is(
   .nav-folder-title-content,
   .nav-file-title-content
 )::after {
-  content: none !important;
-  display: none !important;
-  position: static !important;
-  inset: auto !important;
-  width: 0 !important;
-  height: 0 !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  border: 0 none transparent !important;
-  border-right: 0 none transparent !important;
-  background: none !important;
-  background-image: none !important;
-  box-shadow: none !important;
-  outline: 0 !important;
-  opacity: 0 !important;
-  -webkit-mask: none !important;
-  mask: none !important;
-  clip-path: none !important;
-  pointer-events: none !important;
+  content: none;
+  display: none;
+  position: static;
+  inset: auto;
+  width: 0;
+  height: 0;
+  min-width: 0;
+  min-height: 0;
+  border: 0 none transparent;
+  border-right: 0 none transparent;
+  background: none;
+  background-image: none;
+  box-shadow: none;
+  outline: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* A few themes use inset shadows/outline effects on the title itself to fake
@@ -741,206 +738,151 @@ body.right-none .workspace-leaf-content[data-type="file-explorer"] :is(
    and the user explicitly selected Right Side = None. */
 body.right-none:is(.appearance-border,.appearance-both)
 .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder-title,.nav-file-title) {
-  box-shadow: none !important;
-  outline: none !important;
+  box-shadow: none;
+  outline: none;
 }
 
 /* =========================================================
-   FOLDER ICON SYSTEM
+   FOLDER + FILE ICONS
+   Icons are rendered by main.js with Obsidian's setIcon() API.
+   This avoids CSS masks and keeps icons compatible with Obsidian's
+   bundled Lucide icon set.
 ========================================================= */
-/* Theme default arrow coloring/sizing. */
-body.folder-icon-default .nav-folder-title > .collapse-icon,
-body.folder-icon-default .nav-folder-title > .nav-folder-collapse-indicator { opacity: var(--folder-icon-opacity) !important; }
-body.folder-icon-default .nav-folder-title > .collapse-icon svg,
-body.folder-icon-default .nav-folder-title > .nav-folder-collapse-indicator svg {
-  width: var(--folder-icon-size) !important;
-  height: var(--folder-icon-size) !important;
-}
-body.folder-icon-default.icon-colorful .nav-folder-title > .collapse-icon svg,
-body.folder-icon-default.icon-colorful .nav-folder-title > .nav-folder-collapse-indicator svg {
-  color: rgb(var(--fc)) !important;
-  stroke: rgb(var(--fc)) !important;
-}
-body.folder-icon-default.icon-custom-color .nav-folder-title > .collapse-icon svg,
-body.folder-icon-default.icon-custom-color .nav-folder-title > .nav-folder-collapse-indicator svg {
-  color: rgb(var(--folder-icon-color)) !important;
-  stroke: rgb(var(--folder-icon-color)) !important;
+
+/* Theme default folder arrow. */
+body.folder-color-system-active.folder-icon-default
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) {
+  opacity: var(--folder-icon-opacity);
 }
 
-/* Closed folders use custom replacement when a custom closed icon is selected. */
-body:not(.folder-icon-default) .nav-folder.is-collapsed > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator),
-/* Open folders use custom replacement when the closed icon is custom. */
-body:not(.folder-icon-default) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator),
-/* Open folders can also use a custom open icon while closed folders keep the theme arrow. */
-body[class*="folder-open-icon-"]:not(.folder-open-icon-same) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) {
-  width: max(18px, var(--folder-icon-size)) !important;
-  min-width: max(18px, var(--folder-icon-size)) !important;
-  height: max(18px, var(--folder-icon-size)) !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  transform: none !important;
-  opacity: 1 !important;
+body.folder-color-system-active.folder-icon-default
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
+  width: var(--folder-icon-size);
+  height: var(--folder-icon-size);
 }
 
-body:not(.folder-icon-default) .nav-folder.is-collapsed > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) > svg,
-body:not(.folder-icon-default) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) > svg,
-body[class*="folder-open-icon-"]:not(.folder-open-icon-same) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) > svg {
-  display: none !important;
-  visibility: hidden !important;
+body.folder-color-system-active.folder-icon-default.icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
+  color: rgb(var(--fc));
+  stroke: currentColor;
 }
 
-body:not(.folder-icon-default) .nav-folder.is-collapsed > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before,
-body:not(.folder-icon-default) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before,
-body[class*="folder-open-icon-"]:not(.folder-open-icon-same) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before {
-  content: "" !important;
-  display: block !important;
-  width: var(--folder-icon-size) !important;
-  height: var(--folder-icon-size) !important;
-  flex: 0 0 var(--folder-icon-size) !important;
-  background-color: rgb(var(--fc)) !important;
-  opacity: var(--folder-icon-opacity) !important;
-  -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;
-  -webkit-mask-position: center !important;
-  mask-position: center !important;
-  -webkit-mask-size: contain !important;
-  mask-size: contain !important;
+body.folder-color-system-active.folder-icon-default.icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
+  color: rgb(var(--folder-icon-color));
+  stroke: currentColor;
 }
 
-/* Closed mask. */
-body:not(.folder-icon-default) .nav-folder.is-collapsed > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before {
-  -webkit-mask-image: var(--folder-icon-mask) !important;
-  mask-image: var(--folder-icon-mask) !important;
-}
-/* Open mask defaults to the closed mask, but can be overridden independently. */
-body:not(.folder-icon-default) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before,
-body[class*="folder-open-icon-"]:not(.folder-open-icon-same) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before {
-  -webkit-mask-image: var(--folder-open-icon-mask) !important;
-  mask-image: var(--folder-open-icon-mask) !important;
-}
-body.icon-custom-color:not(.folder-icon-default) .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before,
-body.icon-custom-color[class*="folder-open-icon-"]:not(.folder-open-icon-same) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator)::before {
-  background-color: rgb(var(--folder-icon-color)) !important;
+/* JS-injected folder icon replaces the arrow without changing click behavior. */
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-has-custom-icon > svg {
+  display: none;
 }
 
-/* Prevent themes from rotating replacement icons. */
-body:not(.folder-icon-default) .nav-folder > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator),
-body[class*="folder-open-icon-"]:not(.folder-open-icon-same) .nav-folder:not(.is-collapsed) > .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) {
-  transform: none !important;
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-has-custom-icon {
+  width: max(18px, var(--folder-icon-size));
+  min-width: max(18px, var(--folder-icon-size));
+  height: max(18px, var(--folder-icon-size));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: none;
+  opacity: 1;
 }
 
-/* =========================================================
-   FILE ICON SYSTEM
-========================================================= */
-body.show-file-icons .nav-file-title {
-  padding-left: calc(var(--file-icon-size) + 12px) !important;
-}
-body.show-file-icons .nav-file-title::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 6px !important;
-  top: 50% !important;
-  width: var(--file-icon-size) !important;
-  height: var(--file-icon-size) !important;
-  transform: translateY(-50%) !important;
-  background-color: rgb(var(--fc)) !important;
-  opacity: var(--file-icon-opacity) !important;
-  -webkit-mask-image: var(--file-icon-mask) !important;
-  mask-image: var(--file-icon-mask) !important;
-  -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;
-  -webkit-mask-position: center !important;
-  mask-position: center !important;
-  -webkit-mask-size: contain !important;
-  mask-size: contain !important;
-  pointer-events: none !important;
-}
-body.show-file-icons.file-icon-custom-color .nav-file-title::before {
-  background-color: rgb(var(--file-icon-color)) !important;
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon {
+  width: var(--folder-icon-size);
+  height: var(--folder-icon-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--folder-icon-size);
+  color: rgb(var(--fc));
+  opacity: var(--folder-icon-opacity);
+  pointer-events: none;
 }
 
+body.folder-color-system-active.icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon {
+  color: rgb(var(--folder-icon-color));
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+}
+
+/* File icons. */
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content:has(> .fcs-file-icon) {
+  display: inline-flex;
+  align-items: center;
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon {
+  width: var(--file-icon-size);
+  min-width: var(--file-icon-size);
+  height: var(--file-icon-size);
+  margin-right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 var(--file-icon-size);
+  color: rgb(var(--fc));
+  opacity: var(--file-icon-opacity);
+  pointer-events: none;
+}
+
+body.folder-color-system-active.file-icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon) {
+  color: rgb(var(--file-icon-color));
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+}
 
 /* =========================================================
    THEME/SNIPPET OVERRIDE SAFETY
-   These rules intentionally use File Explorer-specific selectors so the
-   plugin wins over themes and older copies of the snippet.
+   The plugin uses a body marker plus File Explorer-specific selectors to
+   win normal theme rules without.
 ========================================================= */
-
-/* Never allow the wrapper elements themselves to carry a row fill. */
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder,
-.workspace-leaf-content[data-type="file-explorer"] .nav-file {
-  background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder,.nav-file) {
+  background: transparent;
+  background-color: transparent;
+  box-shadow: none;
 }
 
-/* None means truly none, even if a theme or an older snippet paints rows. */
-body.appearance-none .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.appearance-none .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
-  background: transparent !important;
-  background-image: none !important;
-  background-color: transparent !important;
-  border: 0 none transparent !important;
-  box-shadow: none !important;
-  outline: 0 !important;
+body.folder-color-system-active.appearance-none
+.workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder-title,.nav-file-title) {
+  background: transparent;
+  background-image: none;
+  background-color: transparent;
+  border: 0 none transparent;
+  box-shadow: none;
+  outline: 0;
 }
 
-/* Borders only must also kill every possible background source. */
-body.appearance-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.appearance-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
-  background: transparent !important;
-  background-image: none !important;
-  background-color: transparent !important;
+body.folder-color-system-active.appearance-border
+.workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder-title,.nav-file-title) {
+  background: transparent;
+  background-image: none;
+  background-color: transparent;
 }
 
-/* Background-only and Both explicitly repaint the title row. */
-body.appearance-background .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.appearance-background .workspace-leaf-content[data-type="file-explorer"] .nav-file-title,
-body.appearance-both .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.appearance-both .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
-  background-image: none !important;
-  background-color: rgba(var(--row-bg-color), var(--background-opacity)) !important;
-}
-
-/* File icons are rendered on the title-content element instead of the row
-   pseudo-element. Many themes reserve .nav-file-title::before for their own
-   icons, so using the content element is substantially more reliable. */
-body.show-file-icons .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
-  padding-left: revert !important;
-}
-body.show-file-icons .workspace-leaf-content[data-type="file-explorer"] .nav-file-title::before {
-  content: none !important;
-  display: none !important;
-  -webkit-mask-image: none !important;
-  mask-image: none !important;
-}
-body.show-file-icons .workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content {
-  display: inline-flex !important;
-  align-items: center !important;
-}
-body.show-file-icons .workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content::before {
-  content: "" !important;
-  display: inline-block !important;
-  width: var(--file-icon-size) !important;
-  min-width: var(--file-icon-size) !important;
-  height: var(--file-icon-size) !important;
-  margin-right: 6px !important;
-  flex: 0 0 var(--file-icon-size) !important;
-  background-color: rgb(var(--fc)) !important;
-  opacity: var(--file-icon-opacity) !important;
-  -webkit-mask-image: var(--file-icon-mask) !important;
-  mask-image: var(--file-icon-mask) !important;
-  -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;
-  -webkit-mask-position: center !important;
-  mask-position: center !important;
-  -webkit-mask-size: contain !important;
-  mask-size: contain !important;
-  pointer-events: none !important;
-}
-body.show-file-icons.file-icon-custom-color .workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content::before {
-  background-color: rgb(var(--file-icon-color)) !important;
+body.folder-color-system-active:is(.appearance-background,.appearance-both)
+.workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder-title,.nav-file-title) {
+  background-image: none;
+  background-color: rgba(var(--row-bg-color), var(--background-opacity));
 }
 
 /* =========================================================
@@ -966,15 +908,15 @@ body.active-border-double { --active-border-line-style: double; }
 
 /* Typography overrides. These intentionally beat theme .is-active rules. */
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  color: rgba(var(--active-text-color), var(--active-text-opacity)) !important;
-  font-family: var(--active-font-family) !important;
-  font-size: var(--active-font-size) !important;
-  font-weight: var(--active-font-weight) !important;
-  font-style: var(--active-font-style) !important;
-  text-decoration: var(--active-text-decoration) !important;
-  text-transform: var(--active-text-transform) !important;
-  letter-spacing: var(--active-letter-spacing) !important;
-  border-radius: var(--active-left-border-radius) var(--active-right-border-radius) var(--active-right-border-radius) var(--active-left-border-radius) !important;
+  color: rgba(var(--active-text-color), var(--active-text-opacity));
+  font-family: var(--active-font-family);
+  font-size: var(--active-font-size);
+  font-weight: var(--active-font-weight);
+  font-style: var(--active-font-style);
+  text-decoration: var(--active-text-decoration);
+  text-transform: var(--active-text-transform);
+  letter-spacing: var(--active-letter-spacing);
+  border-radius: var(--active-left-border-radius) var(--active-right-border-radius) var(--active-right-border-radius) var(--active-left-border-radius);
 }
 
 /* No special active fill/border leaves normal row decoration intact. */
@@ -984,273 +926,107 @@ body.active-appearance-none .workspace-leaf-content[data-type="file-explorer"] .
 
 /* Active Background Only. */
 body.active-appearance-background .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  background: rgba(var(--active-row-bg-color), var(--active-bg-opacity)) !important;
-  background-image: none !important;
-  border: 0 none transparent !important;
-  box-shadow: none !important;
+  background: rgba(var(--active-row-bg-color), var(--active-bg-opacity));
+  background-image: none;
+  border: 0 none transparent;
+  box-shadow: none;
 }
 
 /* Active Borders Only. */
 body.active-appearance-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  background: transparent !important;
-  background-image: none !important;
-  border: 0 none transparent !important;
-  box-shadow: none !important;
+  background: transparent;
+  background-image: none;
+  border: 0 none transparent;
+  box-shadow: none;
 }
 
 /* Active Background + Borders. */
 body.active-appearance-both .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  background: rgba(var(--active-row-bg-color), var(--active-bg-opacity)) !important;
-  background-image: none !important;
-  border: 0 none transparent !important;
-  box-shadow: none !important;
+  background: rgba(var(--active-row-bg-color), var(--active-bg-opacity));
+  background-image: none;
+  border: 0 none transparent;
+  box-shadow: none;
 }
 
 /* Active border sides. */
 body:is(.active-appearance-border,.active-appearance-both).active-show-left-border
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  border-left: var(--active-left-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity)) !important;
+  border-left: var(--active-left-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity));
 }
 body:is(.active-appearance-border,.active-appearance-both).active-right-border
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  border-right: var(--active-right-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity)) !important;
+  border-right: var(--active-right-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity));
 }
 body:is(.active-appearance-border,.active-appearance-both).active-show-top-border
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  border-top: var(--active-top-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity)) !important;
+  border-top: var(--active-top-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity));
 }
 body:is(.active-appearance-border,.active-appearance-both).active-show-bottom-border
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
-  border-bottom: var(--active-bottom-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity)) !important;
+  border-bottom: var(--active-bottom-border-width) var(--active-border-line-style) rgba(var(--active-row-border-color), var(--active-border-opacity));
 }
 
 body:is(.active-appearance-border,.active-appearance-both):not(.active-show-left-border)
-.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-left: 0 none transparent !important; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-left: 0 none transparent; }
 body:is(.active-appearance-border,.active-appearance-both):not(.active-right-border)
-.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-right: 0 none transparent !important; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-right: 0 none transparent; }
 body:is(.active-appearance-border,.active-appearance-both):not(.active-show-top-border)
-.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-top: 0 none transparent !important; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-top: 0 none transparent; }
 body:is(.active-appearance-border,.active-appearance-both):not(.active-show-bottom-border)
-.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-bottom: 0 none transparent !important; }
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active { border-bottom: 0 none transparent; }
 
 /* Dedicated active right dot. It wins over the normal right-side decoration. */
 body.active-right-dot .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active::after {
-  content: "" !important;
-  display: block !important;
-  position: absolute !important;
-  right: var(--active-right-dot-offset) !important;
-  top: 50% !important;
-  width: var(--active-right-dot-size) !important;
-  height: var(--active-right-dot-size) !important;
-  border: 0 none transparent !important;
-  border-radius: 999px !important;
-  transform: translateY(-50%) !important;
-  background: rgba(var(--active-row-border-color), var(--active-border-opacity)) !important;
-  box-shadow: none !important;
-  opacity: 1 !important;
-  pointer-events: none !important;
+  content: "";
+  display: block;
+  position: absolute;
+  right: var(--active-right-dot-offset);
+  top: 50%;
+  width: var(--active-right-dot-size);
+  height: var(--active-right-dot-size);
+  border: 0 none transparent;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: rgba(var(--active-row-border-color), var(--active-border-opacity));
+  box-shadow: none;
+  opacity: 1;
+  pointer-events: none;
 }
 body.active-right-none .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active::after,
 body.active-right-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active::after {
-  content: none !important;
-  display: none !important;
+  content: none;
+  display: none;
 }
 
-/* Custom active icon. Works whether or not regular file icons are enabled. */
-body.active-show-icon .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .nav-file-title-content {
-  display: inline-flex !important;
-  align-items: center !important;
-}
-body.active-show-icon .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .nav-file-title-content::before {
-  content: "" !important;
-  display: inline-block !important;
-  width: var(--active-icon-size) !important;
-  min-width: var(--active-icon-size) !important;
-  height: var(--active-icon-size) !important;
-  margin-right: 6px !important;
-  flex: 0 0 var(--active-icon-size) !important;
-  background-color: rgba(var(--active-text-color), var(--active-icon-opacity)) !important;
-  opacity: 1 !important;
-  -webkit-mask-image: var(--active-icon-mask) !important;
-  mask-image: var(--active-icon-mask) !important;
-  -webkit-mask-repeat: no-repeat !important;
-  mask-repeat: no-repeat !important;
-  -webkit-mask-position: center !important;
-  mask-position: center !important;
-  -webkit-mask-size: contain !important;
-  mask-size: contain !important;
-  pointer-events: none !important;
-}
-body.active-show-icon.active-icon-row-color .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .nav-file-title-content::before {
-  background-color: rgba(var(--fc), var(--active-icon-opacity)) !important;
-}
-body.active-show-icon.active-icon-text-color .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .nav-file-title-content::before {
-  background-color: rgba(var(--active-text-color), var(--active-icon-opacity)) !important;
-}
-body.active-show-icon.active-icon-custom-color .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .nav-file-title-content::before {
-  background-color: rgba(var(--active-icon-color), var(--active-icon-opacity)) !important;
+/* Active icon styling for the JS-injected file icon. */
+body.folder-color-system-active.active-show-icon
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .fcs-file-icon.fcs-active-icon {
+  width: var(--active-icon-size);
+  min-width: var(--active-icon-size);
+  height: var(--active-icon-size);
+  flex-basis: var(--active-icon-size);
+  opacity: var(--active-icon-opacity);
+  color: rgba(var(--active-text-color), 1);
 }
 
-/* =========================================================
-   SHARED LUCIDE ICON LIBRARY
-========================================================= */
-:root {
-  --lucide-folder: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20%2020a2%202%200%200%200%202-2V8a2%202%200%200%200-2-2h-7.9a2%202%200%200%201-1.69-.9L9.6%203.9A2%202%200%200%200%207.93%203H4a2%202%200%200%200-2%202v13a2%202%200%200%200%202%202Z'/%3E%3C/svg%3E");
-  --lucide-folder-open: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m6%2014%201.5-2.9A2%202%200%200%201%209.24%2010H20a2%202%200%200%201%201.94%202.5l-1.54%206a2%202%200%200%201-1.95%201.5H4a2%202%200%200%201-2-2V5a2%202%200%200%201%202-2h3.9a2%202%200%200%201%201.69.9l.81%201.2a2%202%200%200%200%201.67.9H18a2%202%200%200%201%202%202v2'/%3E%3C/svg%3E");
-  --lucide-archive: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20width='20'%20height='5'%20x='2'%20y='3'%20rx='1'/%3E%3Cpath%20d='M4%208v11a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V8'/%3E%3Cpath%20d='M10%2012h4'/%3E%3C/svg%3E");
-  --lucide-star: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%202%203.09%206.26L22%209.27l-5%204.87%201.18%206.88L12%2017.77l-6.18%203.25L7%2014.14%202%209.27l6.91-1.01Z'/%3E%3C/svg%3E");
-  --lucide-heart: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20.84%204.61a5.5%205.5%200%200%200-7.78%200L12%205.67l-1.06-1.06a5.5%205.5%200%200%200-7.78%207.78L12%2021.23l8.84-8.84a5.5%205.5%200%200%200%200-7.78z'/%3E%3C/svg%3E");
-  --lucide-book: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4%2019.5A2.5%202.5%200%200%201%206.5%2017H20'/%3E%3Cpath%20d='M6.5%202H20v20H6.5A2.5%202.5%200%200%201%204%2019.5v-15A2.5%202.5%200%200%201%206.5%202z'/%3E%3C/svg%3E");
-  --lucide-notebook: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M2%206h4'/%3E%3Cpath%20d='M2%2010h4'/%3E%3Cpath%20d='M2%2014h4'/%3E%3Cpath%20d='M2%2018h4'/%3E%3Crect%20width='16'%20height='20'%20x='4'%20y='2'%20rx='2'/%3E%3Cpath%20d='M16%202v20'/%3E%3C/svg%3E");
-  --lucide-briefcase: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20width='20'%20height='14'%20x='2'%20y='7'%20rx='2'/%3E%3Cpath%20d='M16%2021V5a2%202%200%200%200-2-2h-4a2%202%200%200%200-2%202v16'/%3E%3C/svg%3E");
-  --lucide-home: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m3%2011%209-8%209%208'/%3E%3Cpath%20d='M5%2010v10h14V10'/%3E%3Cpath%20d='M9%2020v-6h6v6'/%3E%3C/svg%3E");
-  --lucide-calendar: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M8%202v4'/%3E%3Cpath%20d='M16%202v4'/%3E%3Crect%20width='18'%20height='18'%20x='3'%20y='4'%20rx='2'/%3E%3Cpath%20d='M3%2010h18'/%3E%3C/svg%3E");
-  --lucide-clock: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='10'/%3E%3Cpolyline%20points='12%206%2012%2012%2016%2014'/%3E%3C/svg%3E");
-  --lucide-tag: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12.586%202.586A2%202%200%200%200%2011.172%202H4a2%202%200%200%200-2%202v7.172a2%202%200%200%200%20.586%201.414l8.704%208.704a2.426%202.426%200%200%200%203.42%200l6.58-6.58a2.426%202.426%200%200%200%200-3.42z'/%3E%3Ccircle%20cx='7.5'%20cy='7.5'%20r='.5'/%3E%3C/svg%3E");
-  --lucide-bookmark: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2021l-7-5-7%205V5a2%202%200%200%201%202-2h10a2%202%200%200%201%202%202z'/%3E%3C/svg%3E");
-  --lucide-box: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M21%208a2%202%200%200%200-1-1.73l-7-4a2%202%200%200%200-2%200l-7%204A2%202%200%200%200%203%208v8a2%202%200%200%200%201%201.73l7%204a2%202%200%200%200%202%200l7-4A2%202%200%200%200%2021%2016Z'/%3E%3Cpath%20d='m3.3%207%208.7%205%208.7-5'/%3E%3Cpath%20d='M12%2022V12'/%3E%3C/svg%3E");
-  --lucide-database: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cellipse%20cx='12'%20cy='5'%20rx='9'%20ry='3'/%3E%3Cpath%20d='M3%205v14c0%201.7%204%203%209%203s9-1.3%209-3V5'/%3E%3Cpath%20d='M3%2012c0%201.7%204%203%209%203s9-1.3%209-3'/%3E%3C/svg%3E");
-  --lucide-code: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolyline%20points='16%2018%2022%2012%2016%206'/%3E%3Cpolyline%20points='8%206%202%2012%208%2018'/%3E%3C/svg%3E");
-  --lucide-terminal: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolyline%20points='4%2017%2010%2011%204%205'/%3E%3Cline%20x1='12'%20x2='20'%20y1='19'%20y2='19'/%3E%3C/svg%3E");
-  --lucide-settings: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12.22%202h-.44a2%202%200%200%200-2%202v.18a2%202%200%200%201-1%201.73l-.43.25a2%202%200%200%201-2%200l-.15-.08a2%202%200%200%200-2.73.73l-.22.38a2%202%200%200%200%20.73%202.73l.15.1a2%202%200%200%201%201%201.72v.51a2%202%200%200%201-1%201.74l-.15.09a2%202%200%200%200-.73%202.73l.22.38a2%202%200%200%200%202.73.73l.15-.08a2%202%200%200%201%202%200l.43.25a2%202%200%200%201%201%201.73V20a2%202%200%200%200%202%202h.44a2%202%200%200%200%202-2v-.18a2%202%200%200%201%201-1.73l.43-.25a2%202%200%200%201%202%200l.15.08a2%202%200%200%200%202.73-.73l.22-.38a2%202%200%200%200-.73-2.73l-.15-.09a2%202%200%200%201-1-1.74v-.51a2%202%200%200%201%201-1.74l.15-.09a2%202%200%200%200%20.73-2.73l-.22-.38a2%202%200%200%200-2.73-.73l-.15.08a2%202%200%200%201-2%200l-.43-.25a2%202%200%200%201-1-1.73V4a2%202%200%200%200-2-2z'/%3E%3Ccircle%20cx='12'%20cy='12'%20r='3'/%3E%3C/svg%3E");
-  --lucide-sparkles: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='m12%203-1.9%205.8a2%202%200%200%201-1.3%201.3L3%2012l5.8%201.9a2%202%200%200%201%201.3%201.3L12%2021l1.9-5.8a2%202%200%200%201%201.3-1.3L21%2012l-5.8-1.9a2%202%200%200%201-1.3-1.3Z'/%3E%3Cpath%20d='M5%203v4'/%3E%3Cpath%20d='M3%205h4'/%3E%3Cpath%20d='M19%2017v4'/%3E%3Cpath%20d='M17%2019h4'/%3E%3C/svg%3E");
-  --lucide-flame: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%2022c4.97%200%209-3.58%209-8%200-2.5-1-4.5-3-6.5.1%202.5-1.4%204-3%204.5.4-3.5-1.6-7-5-10-1%205-4%207-4%2012%200%204.42%202.69%208%206%208Z'/%3E%3C/svg%3E");
-  --lucide-zap: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M13%202%203%2014h9l-1%208%2010-12h-9z'/%3E%3C/svg%3E");
-  --lucide-rocket: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M4.5%2016.5c-1.5%201.26-2%205-2%205s3.74-.5%205-2c.71-.84.7-2.13-.09-2.91a2.18%202.18%200%200%200-2.91-.09z'/%3E%3Cpath%20d='m12%2015-3-3a22%2022%200%200%201%202-3.95A12.87%2012.87%200%200%201%2022%202c0%202.72-.78%207.5-6.05%2011a22.4%2022.4%200%200%201-3.95%202z'/%3E%3C/svg%3E");
-  --lucide-camera: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14.5%204h-5L7%207H4a2%202%200%200%200-2%202v9a2%202%200%200%200%202%202h16a2%202%200%200%200%202-2V9a2%202%200%200%200-2-2h-3z'/%3E%3Ccircle%20cx='12'%20cy='13'%20r='3'/%3E%3C/svg%3E");
-  --lucide-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Crect%20width='18'%20height='18'%20x='3'%20y='3'%20rx='2'/%3E%3Ccircle%20cx='9'%20cy='9'%20r='2'/%3E%3Cpath%20d='m21%2015-5-5L5%2021'/%3E%3C/svg%3E");
-  --lucide-globe: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Ccircle%20cx='12'%20cy='12'%20r='10'/%3E%3Cline%20x1='2'%20x2='22'%20y1='12'%20y2='12'/%3E%3Cpath%20d='M12%202a15.3%2015.3%200%200%201%204%2010%2015.3%2015.3%200%200%201-4%2010%2015.3%2015.3%200%200%201-4-10%2015.3%2015.3%200%200%201%204-10z'/%3E%3C/svg%3E");
-  --lucide-users: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M16%2021v-2a4%204%200%200%200-4-4H6a4%204%200%200%200-4%204v2'/%3E%3Ccircle%20cx='9'%20cy='7'%20r='4'/%3E%3Cpath%20d='M22%2021v-2a4%204%200%200%200-3-3.87'/%3E%3Cpath%20d='M16%203.13a4%204%200%200%201%200%207.75'/%3E%3C/svg%3E");
-  --lucide-user: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2021v-2a4%204%200%200%200-4-4H9a4%204%200%200%200-4%204v2'/%3E%3Ccircle%20cx='12'%20cy='7'%20r='4'/%3E%3C/svg%3E");
-  --lucide-file: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14%202H6a2%202%200%200%200-2%202v16a2%202%200%200%200%202%202h12a2%202%200%200%200%202-2V8z'/%3E%3Cpolyline%20points='14%202%2014%208%2020%208'/%3E%3C/svg%3E");
-  --lucide-list: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cline%20x1='8'%20x2='21'%20y1='6'%20y2='6'/%3E%3Cline%20x1='8'%20x2='21'%20y1='12'%20y2='12'/%3E%3Cline%20x1='8'%20x2='21'%20y1='18'%20y2='18'/%3E%3Cline%20x1='3'%20x2='3.01'%20y1='6'%20y2='6'/%3E%3Cline%20x1='3'%20x2='3.01'%20y1='12'%20y2='12'/%3E%3Cline%20x1='3'%20x2='3.01'%20y1='18'%20y2='18'/%3E%3C/svg%3E");
-  --lucide-check-square: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpolyline%20points='9%2011%2012%2014%2022%204'/%3E%3Cpath%20d='M21%2012v7a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V5a2%202%200%200%201%202-2h11'/%3E%3C/svg%3E");
+body.folder-color-system-active.active-show-icon.active-icon-row-color
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .fcs-file-icon.fcs-active-icon {
+  color: rgb(var(--fc));
 }
 
-body.folder-icon-folder { --folder-icon-mask: var(--lucide-folder); }
-body.folder-icon-folder-open { --folder-icon-mask: var(--lucide-folder-open); }
-body.folder-icon-archive { --folder-icon-mask: var(--lucide-archive); }
-body.folder-icon-star { --folder-icon-mask: var(--lucide-star); }
-body.folder-icon-heart { --folder-icon-mask: var(--lucide-heart); }
-body.folder-icon-book { --folder-icon-mask: var(--lucide-book); }
-body.folder-icon-notebook { --folder-icon-mask: var(--lucide-notebook); }
-body.folder-icon-briefcase { --folder-icon-mask: var(--lucide-briefcase); }
-body.folder-icon-home { --folder-icon-mask: var(--lucide-home); }
-body.folder-icon-calendar { --folder-icon-mask: var(--lucide-calendar); }
-body.folder-icon-clock { --folder-icon-mask: var(--lucide-clock); }
-body.folder-icon-tag { --folder-icon-mask: var(--lucide-tag); }
-body.folder-icon-bookmark { --folder-icon-mask: var(--lucide-bookmark); }
-body.folder-icon-box { --folder-icon-mask: var(--lucide-box); }
-body.folder-icon-database { --folder-icon-mask: var(--lucide-database); }
-body.folder-icon-code { --folder-icon-mask: var(--lucide-code); }
-body.folder-icon-terminal { --folder-icon-mask: var(--lucide-terminal); }
-body.folder-icon-settings { --folder-icon-mask: var(--lucide-settings); }
-body.folder-icon-sparkles { --folder-icon-mask: var(--lucide-sparkles); }
-body.folder-icon-flame { --folder-icon-mask: var(--lucide-flame); }
-body.folder-icon-zap { --folder-icon-mask: var(--lucide-zap); }
-body.folder-icon-rocket { --folder-icon-mask: var(--lucide-rocket); }
-body.folder-icon-camera { --folder-icon-mask: var(--lucide-camera); }
-body.folder-icon-image { --folder-icon-mask: var(--lucide-image); }
-body.folder-icon-globe { --folder-icon-mask: var(--lucide-globe); }
-body.folder-icon-users { --folder-icon-mask: var(--lucide-users); }
-body.folder-icon-user { --folder-icon-mask: var(--lucide-user); }
-body.folder-icon-file { --folder-icon-mask: var(--lucide-file); }
-body.folder-icon-list { --folder-icon-mask: var(--lucide-list); }
-body.folder-icon-check-square { --folder-icon-mask: var(--lucide-check-square); }
+body.folder-color-system-active.active-show-icon.active-icon-text-color
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .fcs-file-icon.fcs-active-icon {
+  color: rgb(var(--active-text-color));
+}
 
-body.folder-open-icon-same { --folder-open-icon-mask: var(--folder-icon-mask); }
-body.folder-open-icon-folder { --folder-open-icon-mask: var(--lucide-folder); }
-body.folder-open-icon-folder-open { --folder-open-icon-mask: var(--lucide-folder-open); }
-body.folder-open-icon-archive { --folder-open-icon-mask: var(--lucide-archive); }
-body.folder-open-icon-star { --folder-open-icon-mask: var(--lucide-star); }
-body.folder-open-icon-heart { --folder-open-icon-mask: var(--lucide-heart); }
-body.folder-open-icon-book { --folder-open-icon-mask: var(--lucide-book); }
-body.folder-open-icon-notebook { --folder-open-icon-mask: var(--lucide-notebook); }
-body.folder-open-icon-briefcase { --folder-open-icon-mask: var(--lucide-briefcase); }
-body.folder-open-icon-home { --folder-open-icon-mask: var(--lucide-home); }
-body.folder-open-icon-calendar { --folder-open-icon-mask: var(--lucide-calendar); }
-body.folder-open-icon-clock { --folder-open-icon-mask: var(--lucide-clock); }
-body.folder-open-icon-tag { --folder-open-icon-mask: var(--lucide-tag); }
-body.folder-open-icon-bookmark { --folder-open-icon-mask: var(--lucide-bookmark); }
-body.folder-open-icon-box { --folder-open-icon-mask: var(--lucide-box); }
-body.folder-open-icon-database { --folder-open-icon-mask: var(--lucide-database); }
-body.folder-open-icon-code { --folder-open-icon-mask: var(--lucide-code); }
-body.folder-open-icon-terminal { --folder-open-icon-mask: var(--lucide-terminal); }
-body.folder-open-icon-settings { --folder-open-icon-mask: var(--lucide-settings); }
-body.folder-open-icon-sparkles { --folder-open-icon-mask: var(--lucide-sparkles); }
-body.folder-open-icon-flame { --folder-open-icon-mask: var(--lucide-flame); }
-body.folder-open-icon-zap { --folder-open-icon-mask: var(--lucide-zap); }
-body.folder-open-icon-rocket { --folder-open-icon-mask: var(--lucide-rocket); }
-body.folder-open-icon-camera { --folder-open-icon-mask: var(--lucide-camera); }
-body.folder-open-icon-image { --folder-open-icon-mask: var(--lucide-image); }
-body.folder-open-icon-globe { --folder-open-icon-mask: var(--lucide-globe); }
-body.folder-open-icon-users { --folder-open-icon-mask: var(--lucide-users); }
-body.folder-open-icon-user { --folder-open-icon-mask: var(--lucide-user); }
-body.folder-open-icon-file { --folder-open-icon-mask: var(--lucide-file); }
-body.folder-open-icon-list { --folder-open-icon-mask: var(--lucide-list); }
-body.folder-open-icon-check-square { --folder-open-icon-mask: var(--lucide-check-square); }
+body.folder-color-system-active.active-show-icon.active-icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .fcs-file-icon.fcs-active-icon {
+  color: rgb(var(--active-icon-color));
+}
 
-body.file-icon-folder { --file-icon-mask: var(--lucide-folder); }
-body.file-icon-folder-open { --file-icon-mask: var(--lucide-folder-open); }
-body.file-icon-archive { --file-icon-mask: var(--lucide-archive); }
-body.file-icon-star { --file-icon-mask: var(--lucide-star); }
-body.file-icon-heart { --file-icon-mask: var(--lucide-heart); }
-body.file-icon-book { --file-icon-mask: var(--lucide-book); }
-body.file-icon-notebook { --file-icon-mask: var(--lucide-notebook); }
-body.file-icon-briefcase { --file-icon-mask: var(--lucide-briefcase); }
-body.file-icon-home { --file-icon-mask: var(--lucide-home); }
-body.file-icon-calendar { --file-icon-mask: var(--lucide-calendar); }
-body.file-icon-clock { --file-icon-mask: var(--lucide-clock); }
-body.file-icon-tag { --file-icon-mask: var(--lucide-tag); }
-body.file-icon-bookmark { --file-icon-mask: var(--lucide-bookmark); }
-body.file-icon-box { --file-icon-mask: var(--lucide-box); }
-body.file-icon-database { --file-icon-mask: var(--lucide-database); }
-body.file-icon-code { --file-icon-mask: var(--lucide-code); }
-body.file-icon-terminal { --file-icon-mask: var(--lucide-terminal); }
-body.file-icon-settings { --file-icon-mask: var(--lucide-settings); }
-body.file-icon-sparkles { --file-icon-mask: var(--lucide-sparkles); }
-body.file-icon-flame { --file-icon-mask: var(--lucide-flame); }
-body.file-icon-zap { --file-icon-mask: var(--lucide-zap); }
-body.file-icon-rocket { --file-icon-mask: var(--lucide-rocket); }
-body.file-icon-camera { --file-icon-mask: var(--lucide-camera); }
-body.file-icon-image { --file-icon-mask: var(--lucide-image); }
-body.file-icon-globe { --file-icon-mask: var(--lucide-globe); }
-body.file-icon-users { --file-icon-mask: var(--lucide-users); }
-body.file-icon-user { --file-icon-mask: var(--lucide-user); }
-body.file-icon-file { --file-icon-mask: var(--lucide-file); }
-body.file-icon-list { --file-icon-mask: var(--lucide-list); }
-body.file-icon-check-square { --file-icon-mask: var(--lucide-check-square); }
-
-
-/* Active-file icon mask selections. */
-body.active-icon-folder { --active-icon-mask: var(--lucide-folder); }
-body.active-icon-folder-open { --active-icon-mask: var(--lucide-folder-open); }
-body.active-icon-archive { --active-icon-mask: var(--lucide-archive); }
-body.active-icon-star { --active-icon-mask: var(--lucide-star); }
-body.active-icon-heart { --active-icon-mask: var(--lucide-heart); }
-body.active-icon-book { --active-icon-mask: var(--lucide-book); }
-body.active-icon-notebook { --active-icon-mask: var(--lucide-notebook); }
-body.active-icon-briefcase { --active-icon-mask: var(--lucide-briefcase); }
-body.active-icon-home { --active-icon-mask: var(--lucide-home); }
-body.active-icon-calendar { --active-icon-mask: var(--lucide-calendar); }
-body.active-icon-clock { --active-icon-mask: var(--lucide-clock); }
-body.active-icon-tag { --active-icon-mask: var(--lucide-tag); }
-body.active-icon-bookmark { --active-icon-mask: var(--lucide-bookmark); }
-body.active-icon-box { --active-icon-mask: var(--lucide-box); }
-body.active-icon-database { --active-icon-mask: var(--lucide-database); }
-body.active-icon-code { --active-icon-mask: var(--lucide-code); }
-body.active-icon-terminal { --active-icon-mask: var(--lucide-terminal); }
-body.active-icon-settings { --active-icon-mask: var(--lucide-settings); }
-body.active-icon-sparkles { --active-icon-mask: var(--lucide-sparkles); }
-body.active-icon-flame { --active-icon-mask: var(--lucide-flame); }
-body.active-icon-zap { --active-icon-mask: var(--lucide-zap); }
-body.active-icon-rocket { --active-icon-mask: var(--lucide-rocket); }
-body.active-icon-camera { --active-icon-mask: var(--lucide-camera); }
-body.active-icon-image { --active-icon-mask: var(--lucide-image); }
-body.active-icon-globe { --active-icon-mask: var(--lucide-globe); }
-body.active-icon-users { --active-icon-mask: var(--lucide-users); }
-body.active-icon-user { --active-icon-mask: var(--lucide-user); }
-body.active-icon-file { --active-icon-mask: var(--lucide-file); }
-body.active-icon-list { --active-icon-mask: var(--lucide-list); }
-body.active-icon-check-square { --active-icon-mask: var(--lucide-check-square); }
-
+body.folder-color-system-active.active-show-icon
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .fcs-file-icon.fcs-active-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke: currentColor;
+}
