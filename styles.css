@@ -4,13 +4,40 @@
 :root {
   --font-size: 14px;
   --font-family: inherit;
+  --font-weight: 400;
+  --font-style: normal;
+  --text-decoration: none;
+  --text-transform: none;
+  --font-variant: normal;
+  --letter-spacing: 0px;
+  --word-spacing: 0px;
+  --line-height: 1.4;
   --text-color-dark: #ffffff;
   --text-color-light: #000000;
 
+  --active-folder-text-color-dark: 255,255,255;
+  --active-folder-text-color-light: 0,0,0;
+  --active-folder-text-color: var(--active-folder-text-color-dark);
+  --active-folder-text-opacity: 1;
+  --active-folder-font-size: 14px;
+  --active-folder-font-family: inherit;
+  --active-folder-font-weight: 600;
+  --active-folder-font-style: normal;
+  --active-folder-text-decoration: none;
+  --active-folder-text-transform: none;
+  --active-folder-font-variant: normal;
+  --active-folder-letter-spacing: 0px;
+  --active-folder-word-spacing: 0px;
+  --active-folder-line-height: 1.4;
+
   --background-opacity: 0.75;
-  --background-custom-color-value: 127,106,168;
+  --background-custom-color-dark: 127,106,168;
+  --background-custom-color-light: 127,106,168;
+  --background-custom-color-value: var(--background-custom-color-dark);
   --border-opacity: 1;
-  --border-custom-color-value: 216,216,216;
+  --border-custom-color-dark: 216,216,216;
+  --border-custom-color-light: 216,216,216;
+  --border-custom-color-value: var(--border-custom-color-dark);
   --left-border-width: 4px;
   --right-border-width: 4px;
   --top-border-width: 1px;
@@ -20,17 +47,26 @@
   --right-dot-size: 7px;
   --right-dot-offset: 8px;
 
-  --folder-icon-color: 216,216,216;
+  --folder-icon-color-dark: 216,216,216;
+  --folder-icon-color-light: 102,102,102;
+  --folder-icon-color: var(--folder-icon-color-dark);
   --folder-icon-opacity: 1;
   --folder-icon-size: 16px;
-  --file-icon-color: 216,216,216;
+  --folder-icon-stroke-width: 1.5;
+  --file-icon-color-dark: 216,216,216;
+  --file-icon-color-light: 102,102,102;
+  --file-icon-color: var(--file-icon-color-dark);
   --file-icon-opacity: 1;
   --file-icon-size: 14px;
+  --file-icon-stroke-width: 1.5;
 
-
-  --active-bg-custom-color: 127,106,168;
+  --active-bg-custom-color-dark: 127,106,168;
+  --active-bg-custom-color-light: 127,106,168;
+  --active-bg-custom-color: var(--active-bg-custom-color-dark);
   --active-bg-opacity: 0.35;
-  --active-border-custom-color: 255,255,255;
+  --active-border-custom-color-dark: 255,255,255;
+  --active-border-custom-color-light: 0,0,0;
+  --active-border-custom-color: var(--active-border-custom-color-dark);
   --active-border-opacity: 1;
   --active-left-border-width: 4px;
   --active-right-border-width: 4px;
@@ -40,7 +76,9 @@
   --active-right-border-radius: 8px;
   --active-right-dot-size: 7px;
   --active-right-dot-offset: 8px;
-  --active-text-color: 255,255,255;
+  --active-text-color-dark: 255,255,255;
+  --active-text-color-light: 0,0,0;
+  --active-text-color: var(--active-text-color-dark);
   --active-text-opacity: 1;
   --active-font-size: 14px;
   --active-font-family: inherit;
@@ -48,23 +86,51 @@
   --active-font-style: normal;
   --active-text-decoration: none;
   --active-text-transform: none;
+  --active-font-variant: normal;
   --active-letter-spacing: 0px;
-  --active-icon-color: 255,255,255;
+  --active-word-spacing: 0px;
+  --active-line-height: 1.4;
+  --active-icon-color-dark: 255,255,255;
+  --active-icon-color-light: 0,0,0;
+  --active-folder-text-color: var(--active-folder-text-color-dark);
+  --active-icon-color: var(--active-icon-color-dark);
   --active-icon-opacity: 1;
   --active-icon-size: 14px;
+  --active-icon-stroke-width: 1.5;
   --active-icon-mask: var(--lucide-file);
   --active-border-line-style: solid;
 
-  --folder-color-custom-1: 255,107,157;
-  --folder-color-custom-2: 255,142,114;
-  --folder-color-custom-3: 255,198,109;
-  --folder-color-custom-4: 229,214,111;
-  --folder-color-custom-5: 126,214,165;
-  --folder-color-custom-6: 101,214,206;
-  --folder-color-custom-7: 114,199,255;
-  --folder-color-custom-8: 143,167,255;
-  --folder-color-custom-9: 184,149,255;
-  --folder-color-custom-10: 227,140,255;
+  --folder-color-custom-dark-1: 255,107,157;
+  --folder-color-custom-dark-2: 255,142,114;
+  --folder-color-custom-dark-3: 255,198,109;
+  --folder-color-custom-dark-4: 229,214,111;
+  --folder-color-custom-dark-5: 126,214,165;
+  --folder-color-custom-dark-6: 101,214,206;
+  --folder-color-custom-dark-7: 114,199,255;
+  --folder-color-custom-dark-8: 143,167,255;
+  --folder-color-custom-dark-9: 184,149,255;
+  --folder-color-custom-dark-10: 227,140,255;
+  --folder-color-custom-light-1: 255,107,157;
+  --folder-color-custom-light-2: 255,142,114;
+  --folder-color-custom-light-3: 255,198,109;
+  --folder-color-custom-light-4: 229,214,111;
+  --folder-color-custom-light-5: 126,214,165;
+  --folder-color-custom-light-6: 101,214,206;
+  --folder-color-custom-light-7: 114,199,255;
+  --folder-color-custom-light-8: 143,167,255;
+  --folder-color-custom-light-9: 184,149,255;
+  --folder-color-custom-light-10: 227,140,255;
+
+  --folder-color-custom-1: var(--folder-color-custom-dark-1);
+  --folder-color-custom-2: var(--folder-color-custom-dark-2);
+  --folder-color-custom-3: var(--folder-color-custom-dark-3);
+  --folder-color-custom-4: var(--folder-color-custom-dark-4);
+  --folder-color-custom-5: var(--folder-color-custom-dark-5);
+  --folder-color-custom-6: var(--folder-color-custom-dark-6);
+  --folder-color-custom-7: var(--folder-color-custom-dark-7);
+  --folder-color-custom-8: var(--folder-color-custom-dark-8);
+  --folder-color-custom-9: var(--folder-color-custom-dark-9);
+  --folder-color-custom-10: var(--folder-color-custom-dark-10);
 
   --f1: 220,150,190;
   --f2: 210,140,215;
@@ -83,8 +149,51 @@
   --file-icon-mask: none;
 }
 
-body.theme-dark { --text-color: var(--text-color-dark); }
-body.theme-light { --text-color: var(--text-color-light); }
+body.theme-dark {
+  --text-color: var(--text-color-dark);
+  --background-custom-color-value: var(--background-custom-color-dark);
+  --border-custom-color-value: var(--border-custom-color-dark);
+  --folder-icon-color: var(--folder-icon-color-dark);
+  --file-icon-color: var(--file-icon-color-dark);
+  --active-bg-custom-color: var(--active-bg-custom-color-dark);
+  --active-border-custom-color: var(--active-border-custom-color-dark);
+  --active-text-color: var(--active-text-color-dark);
+  --active-folder-text-color: var(--active-folder-text-color-dark);
+  --active-icon-color: var(--active-icon-color-dark);
+  --folder-color-custom-1: var(--folder-color-custom-dark-1);
+  --folder-color-custom-2: var(--folder-color-custom-dark-2);
+  --folder-color-custom-3: var(--folder-color-custom-dark-3);
+  --folder-color-custom-4: var(--folder-color-custom-dark-4);
+  --folder-color-custom-5: var(--folder-color-custom-dark-5);
+  --folder-color-custom-6: var(--folder-color-custom-dark-6);
+  --folder-color-custom-7: var(--folder-color-custom-dark-7);
+  --folder-color-custom-8: var(--folder-color-custom-dark-8);
+  --folder-color-custom-9: var(--folder-color-custom-dark-9);
+  --folder-color-custom-10: var(--folder-color-custom-dark-10);
+}
+
+body.theme-light {
+  --text-color: var(--text-color-light);
+  --background-custom-color-value: var(--background-custom-color-light);
+  --border-custom-color-value: var(--border-custom-color-light);
+  --folder-icon-color: var(--folder-icon-color-light);
+  --file-icon-color: var(--file-icon-color-light);
+  --active-bg-custom-color: var(--active-bg-custom-color-light);
+  --active-border-custom-color: var(--active-border-custom-color-light);
+  --active-text-color: var(--active-text-color-light);
+  --active-folder-text-color: var(--active-folder-text-color-light);
+  --active-icon-color: var(--active-icon-color-light);
+  --folder-color-custom-1: var(--folder-color-custom-light-1);
+  --folder-color-custom-2: var(--folder-color-custom-light-2);
+  --folder-color-custom-3: var(--folder-color-custom-light-3);
+  --folder-color-custom-4: var(--folder-color-custom-light-4);
+  --folder-color-custom-5: var(--folder-color-custom-light-5);
+  --folder-color-custom-6: var(--folder-color-custom-light-6);
+  --folder-color-custom-7: var(--folder-color-custom-light-7);
+  --folder-color-custom-8: var(--folder-color-custom-light-8);
+  --folder-color-custom-9: var(--folder-color-custom-light-9);
+  --folder-color-custom-10: var(--folder-color-custom-light-10);
+}
 
 /* =========================================================
    BUILT-IN PALETTES
@@ -494,6 +603,128 @@ body.palette-pastel-rainbow {
 
 
 /* =========================================================
+   THEME-INSPIRED PALETTES
+   Adapted into Folder Color System's 10 repeating slots.
+========================================================= */
+
+/* Flexoki — semantic colors plus the theme's highlight tones. */
+body.theme-light.palette-flexoki-theme {
+  --f1: 175,48,41;
+  --f2: 188,82,21;
+  --f3: 173,131,1;
+  --f4: 102,128,11;
+  --f5: 36,131,123;
+  --f6: 32,94,166;
+  --f7: 94,64,157;
+  --f8: 160,47,111;
+  --f9: 187,220,206;
+  --f10: 247,209,61;
+}
+body.theme-dark.palette-flexoki-theme {
+  --f1: 209,77,65;
+  --f2: 218,112,44;
+  --f3: 208,162,21;
+  --f4: 135,154,57;
+  --f5: 58,169,159;
+  --f6: 67,133,190;
+  --f7: 139,126,200;
+  --f8: 206,93,151;
+  --f9: 30,95,91;
+  --f10: 213,159,17;
+}
+
+/* Minimal default semantic colors, expanded to ten slots. */
+body.palette-minimal-theme {
+  --f1: 208,66,85;
+  --f2: 213,118,63;
+  --f3: 229,181,103;
+  --f4: 168,195,115;
+  --f5: 115,187,178;
+  --f6: 108,153,187;
+  --f7: 158,134,200;
+  --f8: 176,82,121;
+  --f9: 133,156,194;
+  --f10: 192,92,102;
+}
+
+/* Catppuccin uses Latte in light mode and the selected dark flavor in dark mode. */
+body.theme-light:is(.palette-catppuccin-frappe,.palette-catppuccin-macchiato,.palette-catppuccin-mocha) {
+  --f1: 220,138,120;
+  --f2: 221,120,120;
+  --f3: 234,118,203;
+  --f4: 136,57,239;
+  --f5: 210,15,57;
+  --f6: 230,69,83;
+  --f7: 254,100,11;
+  --f8: 223,142,29;
+  --f9: 64,160,43;
+  --f10: 23,146,153;
+}
+body.theme-dark.palette-catppuccin-frappe {
+  --f1: 242,213,207;
+  --f2: 238,190,190;
+  --f3: 244,184,228;
+  --f4: 202,158,230;
+  --f5: 231,130,132;
+  --f6: 234,153,156;
+  --f7: 239,159,118;
+  --f8: 229,200,144;
+  --f9: 166,209,137;
+  --f10: 129,200,190;
+}
+body.theme-dark.palette-catppuccin-macchiato {
+  --f1: 244,219,214;
+  --f2: 240,198,198;
+  --f3: 245,189,230;
+  --f4: 198,160,246;
+  --f5: 237,135,150;
+  --f6: 238,153,160;
+  --f7: 245,169,127;
+  --f8: 238,212,159;
+  --f9: 166,218,149;
+  --f10: 139,213,202;
+}
+body.theme-dark.palette-catppuccin-mocha {
+  --f1: 245,224,220;
+  --f2: 242,205,205;
+  --f3: 245,194,231;
+  --f4: 203,166,247;
+  --f5: 243,139,168;
+  --f6: 235,160,172;
+  --f7: 250,179,135;
+  --f8: 249,226,175;
+  --f9: 166,227,161;
+  --f10: 148,226,213;
+}
+
+/* Things 3 / Minimal Things semantic colors and mode-specific blue/highlight tones. */
+body.theme-light.palette-things3-theme {
+  --f1: 255,48,108;
+  --f2: 255,149,2;
+  --f3: 255,213,0;
+  --f4: 75,191,94;
+  --f5: 73,174,164;
+  --f6: 27,97,194;
+  --f7: 176,81,222;
+  --f8: 255,46,85;
+  --f9: 202,226,255;
+  --f10: 125,127,132;
+}
+body.theme-dark.palette-things3-theme {
+  --f1: 255,48,108;
+  --f2: 255,149,2;
+  --f3: 255,213,0;
+  --f4: 75,191,94;
+  --f5: 73,174,164;
+  --f6: 77,149,247;
+  --f7: 176,81,222;
+  --f8: 255,46,85;
+  --f9: 40,119,236;
+  --f10: 203,204,205;
+}
+
+
+/* =========================================================
    CUSTOM PALETTE
 ========================================================= */
 body.palette-custom {
@@ -521,6 +752,18 @@ body.palette-custom {
   box-sizing: border-box;
   border-radius: var(--left-border-radius) var(--right-border-radius) var(--right-border-radius) var(--left-border-radius);
   border: 0 solid transparent;
+}
+
+body.folder-color-system-active.explorer-typography
+.workspace-leaf-content[data-type="file-explorer"] :is(.nav-file-title,.nav-folder-title) {
+  font-weight: var(--font-weight);
+  font-style: var(--font-style);
+  text-decoration: var(--text-decoration);
+  text-transform: var(--text-transform);
+  font-variant: var(--font-variant);
+  letter-spacing: var(--letter-spacing);
+  word-spacing: var(--word-spacing);
+  line-height: var(--line-height);
 }
 
 /* =========================================================
@@ -759,23 +1002,46 @@ body.folder-color-system-active.folder-icon-default
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
   width: var(--folder-icon-size);
   height: var(--folder-icon-size);
+  stroke-width: var(--folder-icon-stroke-width);
 }
 
 body.folder-color-system-active.folder-icon-default.icon-colorful
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
   color: rgb(var(--fc));
-  stroke: currentColor;
+  stroke: rgb(var(--fc));
 }
 
 body.folder-color-system-active.folder-icon-default.icon-custom-color
 .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
   color: rgb(var(--folder-icon-color));
-  stroke: currentColor;
+  stroke: rgb(var(--folder-icon-color));
+}
+
+body.folder-color-system-active.folder-icon-default.icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke: rgb(var(--fc));
+}
+
+body.folder-color-system-active.folder-icon-default.icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke: rgb(var(--folder-icon-color));
 }
 
 /* JS-injected folder icon replaces the arrow without changing click behavior. */
 body.folder-color-system-active
-.workspace-leaf-content[data-type="file-explorer"] .fcs-has-custom-icon > svg {
+.workspace-leaf-content[data-type="file-explorer"] .fcs-has-custom-icon > :not(.fcs-folder-icon) {
+  /* Themes may wrap the native chevron instead of placing the SVG directly
+     inside the collapse indicator. Hide every native visual child so it
+     cannot sit underneath the plugin icon. */
+  display: none;
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-has-custom-icon::before,
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-has-custom-icon::after {
+  /* Some themes draw the collapse arrow with a pseudo-element. */
+  content: none;
   display: none;
 }
 
@@ -788,6 +1054,7 @@ body.folder-color-system-active
   align-items: center;
   justify-content: center;
   transform: none;
+  rotate: 0deg;
   opacity: 1;
 }
 
@@ -795,25 +1062,72 @@ body.folder-color-system-active
 .workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon {
   width: var(--folder-icon-size);
   height: var(--folder-icon-size);
+  margin: 0;
+  padding: 0;
+  position: static;
+  inset: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 var(--folder-icon-size);
-  color: rgb(var(--fc));
   opacity: var(--folder-icon-opacity);
   pointer-events: none;
+  transform: none;
+  rotate: 0deg;
+}
+
+/* Own the SVG stroke color explicitly. Some themes set color/stroke directly
+   on collapse-indicator SVGs, which can otherwise turn palette-matched icons
+   gray even though the containing row has the correct --fc palette value. */
+body.folder-color-system-active.icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon,
+body.folder-color-system-active.icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon svg {
+  color: rgb(var(--fc));
+  stroke: rgb(var(--fc));
 }
 
 body.folder-color-system-active.icon-custom-color
-.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon {
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon,
+body.folder-color-system-active.icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon svg {
   color: rgb(var(--folder-icon-color));
+  stroke: rgb(var(--folder-icon-color));
 }
 
 body.folder-color-system-active
 .workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon svg {
   width: 100%;
   height: 100%;
-  stroke: currentColor;
+  margin: 0;
+  display: block;
+  stroke-width: var(--folder-icon-stroke-width);
+  transform: none;
+  rotate: 0deg;
+}
+
+body.folder-color-system-active.icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke: rgb(var(--fc));
+}
+
+body.folder-color-system-active.icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke: rgb(var(--folder-icon-color));
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-folder-icon svg :is(path,line,polyline,polygon,circle,rect,ellipse),
+body.folder-color-system-active.folder-icon-default
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke-width: var(--folder-icon-stroke-width);
+  vector-effect: non-scaling-stroke;
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke-width: var(--file-icon-stroke-width);
+  vector-effect: non-scaling-stroke;
 }
 
 /* File icons. */
@@ -821,6 +1135,13 @@ body.folder-color-system-active
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content.fcs-has-file-icon {
   display: inline-flex;
   align-items: center;
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title-content.fcs-has-file-icon::before {
+  /* Avoid a theme-provided file glyph occupying the same slot as ours. */
+  content: none;
+  display: none;
 }
 
 body.folder-color-system-active
@@ -833,21 +1154,44 @@ body.folder-color-system-active
   align-items: center;
   justify-content: center;
   flex: 0 0 var(--file-icon-size);
-  color: rgb(var(--fc));
   opacity: var(--file-icon-opacity);
   pointer-events: none;
 }
 
+body.folder-color-system-active.file-icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon),
+body.folder-color-system-active.file-icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon) svg {
+  color: rgb(var(--fc));
+  stroke: rgb(var(--fc));
+}
+
 body.folder-color-system-active.file-icon-custom-color
-.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon) {
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon),
+body.folder-color-system-active.file-icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon) svg {
   color: rgb(var(--file-icon-color));
+  stroke: rgb(var(--file-icon-color));
 }
 
 body.folder-color-system-active
 .workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon svg {
   width: 100%;
   height: 100%;
-  stroke: currentColor;
+  display: block;
+  stroke-width: var(--file-icon-stroke-width);
+  transform: none;
+  rotate: 0deg;
+}
+
+body.folder-color-system-active.file-icon-colorful
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke: rgb(var(--fc));
+}
+
+body.folder-color-system-active.file-icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .fcs-file-icon:not(.fcs-active-icon) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke: rgb(var(--file-icon-color));
 }
 
 /* =========================================================
@@ -886,6 +1230,27 @@ body.folder-color-system-active:is(.appearance-background,.appearance-both)
 }
 
 /* =========================================================
+   ACTIVE FOLDER TYPOGRAPHY
+   main.js marks every ancestor folder of the active file with
+   .fcs-active-folder. This gives a stable meaning to "active folder"
+   even when several folders are expanded at once.
+========================================================= */
+body.folder-color-system-active.active-folder-typography
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title.fcs-active-folder {
+  color: rgba(var(--active-folder-text-color), var(--active-folder-text-opacity));
+  font-family: var(--active-folder-font-family);
+  font-size: var(--active-folder-font-size);
+  font-weight: var(--active-folder-font-weight);
+  font-style: var(--active-folder-font-style);
+  text-decoration: var(--active-folder-text-decoration);
+  text-transform: var(--active-folder-text-transform);
+  font-variant: var(--active-folder-font-variant);
+  letter-spacing: var(--active-folder-letter-spacing);
+  word-spacing: var(--active-folder-word-spacing);
+  line-height: var(--active-folder-line-height);
+}
+
+/* =========================================================
    ACTIVE FILE - FULL CUSTOMIZATION
 ========================================================= */
 
@@ -908,6 +1273,11 @@ body.active-border-double { --active-border-line-style: double; }
 
 /* Typography overrides. These intentionally beat theme .is-active rules. */
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
+  border-radius: var(--active-left-border-radius) var(--active-right-border-radius) var(--active-right-border-radius) var(--active-left-border-radius);
+}
+
+body.folder-color-system-active.active-file-typography
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active {
   color: rgba(var(--active-text-color), var(--active-text-opacity));
   font-family: var(--active-font-family);
   font-size: var(--active-font-size);
@@ -915,8 +1285,10 @@ body.active-border-double { --active-border-line-style: double; }
   font-style: var(--active-font-style);
   text-decoration: var(--active-text-decoration);
   text-transform: var(--active-text-transform);
+  font-variant: var(--active-font-variant);
   letter-spacing: var(--active-letter-spacing);
-  border-radius: var(--active-left-border-radius) var(--active-right-border-radius) var(--active-right-border-radius) var(--active-left-border-radius);
+  word-spacing: var(--active-word-spacing);
+  line-height: var(--active-line-height);
 }
 
 /* No special active fill/border leaves normal row decoration intact. */
@@ -1016,7 +1388,7 @@ body.folder-color-system-active.active-show-icon.active-icon-row-color
 
 body.folder-color-system-active.active-show-icon.active-icon-text-color
 .workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .fcs-file-icon.fcs-active-icon {
-  color: rgb(var(--active-text-color));
+  color: inherit;
 }
 
 body.folder-color-system-active.active-show-icon.active-icon-custom-color
@@ -1029,4 +1401,20 @@ body.folder-color-system-active.active-show-icon
   width: 100%;
   height: 100%;
   stroke: currentColor;
+  stroke-width: var(--active-icon-stroke-width);
+}
+
+body.folder-color-system-active.active-show-icon
+.workspace-leaf-content[data-type="file-explorer"] .nav-file-title.is-active .fcs-file-icon.fcs-active-icon svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
+  stroke-width: var(--active-icon-stroke-width);
+  vector-effect: non-scaling-stroke;
+}
+
+/* Numeric value shown between sliders and their per-setting reset button. */
+.fcs-setting-value {
+  min-width: 3.5em;
+  color: var(--text-muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
