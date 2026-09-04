@@ -1011,14 +1011,14 @@ body.folder-color-system-active
 /* With an Iconic folder icon, Iconic owns the collapse element and Folder
    Color System contributes only palette sizing and color—never a second icon. */
 body.folder-color-system-active
-.workspace-leaf-content[data-type="file-explorer"] .fcs-uses-iconic-icon {
+.workspace-leaf-content[data-type="file-explorer"] :is(.collapse-icon,.nav-folder-collapse-indicator).fcs-uses-iconic-icon {
   color: rgb(var(--fc));
   stroke: rgb(var(--fc));
   opacity: var(--folder-icon-opacity);
 }
 
 body.folder-color-system-active.icon-custom-color
-.workspace-leaf-content[data-type="file-explorer"] .fcs-uses-iconic-icon {
+.workspace-leaf-content[data-type="file-explorer"] :is(.collapse-icon,.nav-folder-collapse-indicator).fcs-uses-iconic-icon {
   color: rgb(var(--folder-icon-color));
   stroke: rgb(var(--folder-icon-color));
 }

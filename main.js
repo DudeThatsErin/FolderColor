@@ -596,18 +596,16 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       if (!collapse) return;
 
       const isCollapsed = folder.classList.contains('is-collapsed');
-      if (this.getIconicFolderIcon(title)) {
+      if (this.getIconicFolderIcon(folder, title, collapse)) {
         // Iconic owns the collapse element when it supplies a folder icon.
         // Injecting an SVG into that same host makes the plugins race and can
         // leave duplicate icons behind after a folder is toggled.
         collapse.querySelector(':scope > .fcs-folder-icon')?.remove();
         collapse.classList.remove('fcs-has-custom-icon');
         collapse.classList.add('fcs-uses-iconic-icon');
-        title.classList.add('fcs-uses-iconic-icon');
         return;
       }
       collapse.classList.remove('fcs-uses-iconic-icon');
-      title.classList.remove('fcs-uses-iconic-icon');
       let settingValue;
       if (isCollapsed) {
         settingValue = s.folderIcon;
@@ -655,11 +653,17 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     });
   }
 
-  getIconicFolderIcon(title) {
+  getIconicFolderIcon(folder, title, collapse) {
     const iconic = this.app.plugins?.getPlugin?.('iconic') || this.app.plugins?.plugins?.iconic;
-    const path = title?.dataset?.path;
-    const icon = iconic?.settings?.fileIcons?.[path]?.icon;
-    return typeof icon === 'string' && icon.length > 0 ? icon : null;
+    const path = title?.dataset?.path || folder?.dataset?.path || folder?.querySelector?.('[data-path]')?.dataset?.path;
+    const settings = iconic?.settings || iconic?.data || iconic?.plugin?.settings;
+    const icon = settings?.fileIcons?.[path]?.icon;
+
+    // Iconic marks the collapse element it has replaced. This DOM check makes
+    // the handoff reliable even if Iconic finishes loading after this plugin.
+    return (typeof icon === 'string' && icon.length > 0)
+      || collapse?.classList?.contains('iconic-icon')
+      || Boolean(title?.querySelector?.(':scope > .iconic-sidekick'));
   }
 
   removeInjectedIcons() {

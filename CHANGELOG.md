@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.2
+
+- Fixed Iconic detection for custom folder icons, including Iconic instances that finish loading after Folder Color System.
+- Kept Iconic palette styling scoped to its icon so folder titles retain their own typography and opacity.
+
 ## 1.4.1
 
 - Fixed the default folder arrow to use one right-pointing chevron.
