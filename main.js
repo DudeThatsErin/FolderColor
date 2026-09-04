@@ -635,6 +635,15 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       const useRegular = s.showFileIcons;
       const existing = content.querySelector(':scope > .fcs-file-icon');
 
+      // Iconic renders file icons in a separate tree-item-icon before the
+      // title content. If it owns this row, remove our regular/active icon so
+      // the two plugins never display adjacent icons.
+      if (this.getIconicFileIcon(title)) {
+        existing?.remove();
+        content.classList.remove('fcs-has-file-icon');
+        return;
+      }
+
       if (!useActive && !useRegular) {
         existing?.remove();
         content.classList.remove('fcs-has-file-icon');
@@ -654,7 +663,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
   }
 
   getIconicFolderIcon(folder, title, collapse) {
-    const iconic = this.app.plugins?.getPlugin?.('iconic') || this.app.plugins?.plugins?.iconic;
+    const iconic = this.getIconicPlugin();
     const path = title?.dataset?.path || folder?.dataset?.path || folder?.querySelector?.('[data-path]')?.dataset?.path;
     const settings = iconic?.settings || iconic?.data || iconic?.plugin?.settings;
     const icon = settings?.fileIcons?.[path]?.icon;
@@ -664,6 +673,20 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     return (typeof icon === 'string' && icon.length > 0)
       || collapse?.classList?.contains('iconic-icon')
       || Boolean(title?.querySelector?.(':scope > .iconic-sidekick'));
+  }
+
+  getIconicFileIcon(title) {
+    const iconic = this.getIconicPlugin();
+    const path = title?.dataset?.path;
+    const settings = iconic?.settings || iconic?.data || iconic?.plugin?.settings;
+    const icon = settings?.fileIcons?.[path]?.icon;
+
+    return (typeof icon === 'string' && icon.length > 0)
+      || Boolean(title?.querySelector?.(':scope > .tree-item-icon.iconic-icon, :scope > .iconic-sidekick'));
+  }
+
+  getIconicPlugin() {
+    return this.app.plugins?.getPlugin?.('iconic') || this.app.plugins?.plugins?.iconic;
   }
 
   removeInjectedIcons() {

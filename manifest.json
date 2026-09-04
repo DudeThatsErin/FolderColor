@@ -1,7 +1,7 @@
 {
   "id": "folder-color-system",
   "name": "Folder Color System",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "minAppVersion": "1.5.0",
   "description": "Customizable File Explorer palettes, theme-inspired colors, recursive inheritance, typography, and Lucide-style icons.",
   "author": "Erin Skidds",

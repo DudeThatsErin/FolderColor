@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.3
+
+- Fixed duplicate file icons when Iconic and Folder Color System are both enabled.
+- Iconic now takes precedence for both regular and active file icons, matching the existing folder-icon handoff.
+
 ## 1.4.2
 
 - Fixed Iconic detection for custom folder icons, including Iconic instances that finish loading after Folder Color System.
