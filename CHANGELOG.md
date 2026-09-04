@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1
+
+- Fixed the default folder arrow to use one right-pointing chevron.
+- Prevented duplicate arrows while folders are expanded and collapsed.
+- When Iconic assigns a folder icon, Folder Color System now lets Iconic own the icon and applies only its palette styling.
+
 ## 1.3.3
 
 - Removed the `:has()` selector from file icon styling to avoid broad selector invalidation and Obsidian CSS lint warnings.

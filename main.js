@@ -72,7 +72,7 @@ const RIGHT_DECORATION_OPTIONS = [
 ];
 
 const ICON_OPTIONS = [
-  ['folder-icon-default', 'Theme Default Arrow'],
+  ['folder-icon-default', 'Default Arrow (Chevron)'],
   ['folder-icon-folder', 'Folder'],
   ['folder-icon-folder-open', 'Folder Open'],
   ['folder-icon-archive', 'Archive'],
@@ -234,7 +234,7 @@ const CSS_VARIABLES = [
 ];
 
 const DEFAULT_SETTINGS = {
-  settingsSchemaVersion: 3,
+  settingsSchemaVersion: 4,
   palette: 'palette-pink',
   customColorsDark: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
   customColorsLight: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
@@ -378,7 +378,8 @@ function clampNumber(value, min, max) {
 }
 
 function iconNameFromSetting(value) {
-  if (!value || value === 'folder-icon-default' || value === 'folder-open-icon-same') return null;
+  if (!value || value === 'folder-open-icon-same') return null;
+  if (value === 'folder-icon-default') return 'chevron-right';
   let name = value
     .replace(/^folder-open-icon-/, '')
     .replace(/^folder-icon-/, '')
@@ -437,7 +438,7 @@ function migrateSettings(saved) {
     migrateOldIconDefaults('folderIconColorDark', 'folderIconColorLight');
     migrateOldIconDefaults('fileIconColorDark', 'fileIconColorLight');
   }
-  migrated.settingsSchemaVersion = 3;
+  migrated.settingsSchemaVersion = 4;
 
   delete migrated.customColors;
   return migrated;
@@ -595,6 +596,18 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       if (!collapse) return;
 
       const isCollapsed = folder.classList.contains('is-collapsed');
+      if (this.getIconicFolderIcon(title)) {
+        // Iconic owns the collapse element when it supplies a folder icon.
+        // Injecting an SVG into that same host makes the plugins race and can
+        // leave duplicate icons behind after a folder is toggled.
+        collapse.querySelector(':scope > .fcs-folder-icon')?.remove();
+        collapse.classList.remove('fcs-has-custom-icon');
+        collapse.classList.add('fcs-uses-iconic-icon');
+        title.classList.add('fcs-uses-iconic-icon');
+        return;
+      }
+      collapse.classList.remove('fcs-uses-iconic-icon');
+      title.classList.remove('fcs-uses-iconic-icon');
       let settingValue;
       if (isCollapsed) {
         settingValue = s.folderIcon;
@@ -642,9 +655,17 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     });
   }
 
+  getIconicFolderIcon(title) {
+    const iconic = this.app.plugins?.getPlugin?.('iconic') || this.app.plugins?.plugins?.iconic;
+    const path = title?.dataset?.path;
+    const icon = iconic?.settings?.fileIcons?.[path]?.icon;
+    return typeof icon === 'string' && icon.length > 0 ? icon : null;
+  }
+
   removeInjectedIcons() {
     document.querySelectorAll('.fcs-folder-icon, .fcs-file-icon').forEach(el => el.remove());
     document.querySelectorAll('.fcs-has-custom-icon').forEach(el => el.classList.remove('fcs-has-custom-icon'));
+    document.querySelectorAll('.fcs-uses-iconic-icon').forEach(el => el.classList.remove('fcs-uses-iconic-icon'));
     document.querySelectorAll('.fcs-has-file-icon').forEach(el => el.classList.remove('fcs-has-file-icon'));
     document.querySelectorAll('.fcs-active-folder').forEach(el => el.classList.remove('fcs-active-folder'));
   }
@@ -905,7 +926,7 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
         type: 'group',
         heading: 'Folder icons',
         items: [
-          self.dropdownDef('Closed Folder Icon', 'Icon shown when a folder is closed.', 'folderIcon', ICON_OPTIONS, ['folder icon', 'closed icon']),
+          self.dropdownDef('Closed Folder Icon', 'Icon shown when a folder is closed. Default Arrow is a single right-pointing chevron.', 'folderIcon', ICON_OPTIONS, ['folder icon', 'closed icon']),
           self.dropdownDef('Open Folder Icon', 'Choose a different icon for open folders, or keep the closed-folder icon.', 'folderOpenIcon', OPEN_ICON_OPTIONS, ['open icon', 'expanded folder icon']),
           self.dropdownDef('Folder Icon Color', 'Match Palette Color follows the palette color assigned to each folder row. Choose Custom Color to use the colors below.', 'folderIconColorMode', ICON_COLOR_OPTIONS, ['folder icon color'], true),
           self.colorDef('Folder Icon Custom Color (Dark Mode)', 'Used when Folder Icon Color is set to Custom Color.', 'folderIconColorDark', ['folder icon custom color', 'dark mode folder icon'], is('folderIconColorMode', 'icon-custom-color')),
@@ -1192,4 +1213,3 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
     return DEFAULT_SETTINGS[path];
   }
 }
-

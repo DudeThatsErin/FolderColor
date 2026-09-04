@@ -992,39 +992,11 @@ body.right-none:is(.appearance-border,.appearance-both)
    bundled Lucide icon set.
 ========================================================= */
 
-/* Theme default folder arrow. */
+/* The default arrow is a single chevron injected by the plugin, rather than a
+   theme glyph. It rotates down when the folder is open. */
 body.folder-color-system-active.folder-icon-default
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) {
-  opacity: var(--folder-icon-opacity);
-}
-
-body.folder-color-system-active.folder-icon-default
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
-  width: var(--folder-icon-size);
-  height: var(--folder-icon-size);
-  stroke-width: var(--folder-icon-stroke-width);
-}
-
-body.folder-color-system-active.folder-icon-default.icon-colorful
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
-  color: rgb(var(--fc));
-  stroke: rgb(var(--fc));
-}
-
-body.folder-color-system-active.folder-icon-default.icon-custom-color
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg {
-  color: rgb(var(--folder-icon-color));
-  stroke: rgb(var(--folder-icon-color));
-}
-
-body.folder-color-system-active.folder-icon-default.icon-colorful
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
-  stroke: rgb(var(--fc));
-}
-
-body.folder-color-system-active.folder-icon-default.icon-custom-color
-.workspace-leaf-content[data-type="file-explorer"] .nav-folder-title > :is(.collapse-icon,.nav-folder-collapse-indicator) svg :is(path,line,polyline,polygon,circle,rect,ellipse) {
-  stroke: rgb(var(--folder-icon-color));
+.workspace-leaf-content[data-type="file-explorer"] .nav-folder:not(.is-collapsed) > .nav-folder-title .fcs-folder-icon {
+  transform: rotate(90deg);
 }
 
 /* JS-injected folder icon replaces the arrow without changing click behavior. */
@@ -1034,6 +1006,28 @@ body.folder-color-system-active
      inside the collapse indicator. Hide every native visual child so it
      cannot sit underneath the plugin icon. */
   display: none;
+}
+
+/* With an Iconic folder icon, Iconic owns the collapse element and Folder
+   Color System contributes only palette sizing and color—never a second icon. */
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] .fcs-uses-iconic-icon {
+  color: rgb(var(--fc));
+  stroke: rgb(var(--fc));
+  opacity: var(--folder-icon-opacity);
+}
+
+body.folder-color-system-active.icon-custom-color
+.workspace-leaf-content[data-type="file-explorer"] .fcs-uses-iconic-icon {
+  color: rgb(var(--folder-icon-color));
+  stroke: rgb(var(--folder-icon-color));
+}
+
+body.folder-color-system-active
+.workspace-leaf-content[data-type="file-explorer"] :is(.collapse-icon,.nav-folder-collapse-indicator).fcs-uses-iconic-icon svg {
+  width: var(--folder-icon-size);
+  height: var(--folder-icon-size);
+  stroke-width: var(--folder-icon-stroke-width);
 }
 
 body.folder-color-system-active
