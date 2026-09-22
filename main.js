@@ -837,9 +837,13 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
+    this.controlResetUpdaters = new Map();
   }
 
   getSettingDefinitions() {
+    // Settings may be re-rendered as conditional rows appear or disappear.
+    // Keep only the controls from the current rendered definition set.
+    this.controlResetUpdaters.clear();
     const self = this;
     const s = () => self.plugin.settings;
     const is = (key, value) => () => self.getValue(key) === value;
@@ -1062,6 +1066,7 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
                 .onClick(async () => {
                   self.plugin.settings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
                   await self.plugin.saveSettings();
+                  self.syncRenderedControlsToDefaults();
                   self.refreshSettingsDom();
                 });
             });
@@ -1081,14 +1086,29 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
     }
   }
 
-  addResetButton(setting, key) {
+  registerControlResetUpdater(key, updateControl) {
+    if (typeof updateControl === 'function') {
+      this.controlResetUpdaters.set(key, updateControl);
+    }
+  }
+
+  syncRenderedControlsToDefaults() {
+    for (const [key, updateControl] of this.controlResetUpdaters) {
+      updateControl(this.getDefault(key));
+    }
+  }
+
+  addResetButton(setting, key, updateControl) {
+    this.registerControlResetUpdater(key, updateControl);
     setting.addExtraButton((button) => {
       button
         .setIcon('rotate-ccw')
         .setTooltip(`Reset ${setting.nameEl?.textContent || 'setting'} to default`)
         .onClick(async () => {
-          this.setValue(key, this.getDefault(key));
+          const defaultValue = this.getDefault(key);
+          this.setValue(key, defaultValue);
           await this.plugin.saveSettings();
+          updateControl?.(defaultValue);
           this.refreshSettingsDom();
         });
     });
@@ -1102,7 +1122,9 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
       aliases,
       ...(visible ? { visible } : {}),
       render: (setting) => {
+        let dropdownControl;
         setting.addDropdown((dropdown) => {
+          dropdownControl = dropdown;
           for (const [value, label] of options) dropdown.addOption(value, label);
           dropdown.setValue(String(this.getValue(key)));
           dropdown.onChange(async (value) => {
@@ -1111,7 +1133,7 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
             if (refreshOnChange) this.refreshSettingsDom();
           });
         });
-        this.addResetButton(setting, key);
+        this.addResetButton(setting, key, (value) => dropdownControl?.setValue(String(value)));
       },
     };
   }
@@ -1123,7 +1145,9 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
       aliases,
       ...(visible ? { visible } : {}),
       render: (setting) => {
+        let toggleControl;
         setting.addToggle((toggle) => {
+          toggleControl = toggle;
           toggle.setValue(Boolean(this.getValue(key)));
           toggle.onChange(async (value) => {
             this.setValue(key, value);
@@ -1131,7 +1155,7 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
             if (refreshOnChange) this.refreshSettingsDom();
           });
         });
-        this.addResetButton(setting, key);
+        this.addResetButton(setting, key, (value) => toggleControl?.setValue(Boolean(value)));
       },
     };
   }
@@ -1144,7 +1168,9 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
       ...(visible ? { visible } : {}),
       render: (setting) => {
         let valueEl;
+        let sliderControl;
         setting.addSlider((slider) => {
+          sliderControl = slider;
           slider
             .setLimits(min, max, step)
             .setValue(Number(this.getValue(key)))
@@ -1160,7 +1186,10 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
           cls: 'fcs-setting-value',
           text: `${this.getValue(key)}${suffix || ''}`,
         });
-        this.addResetButton(setting, key);
+        this.addResetButton(setting, key, (value) => {
+          sliderControl?.setValue(Number(value));
+          valueEl?.setText(`${value}${suffix || ''}`);
+        });
       },
     };
   }
@@ -1172,14 +1201,16 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
       aliases,
       ...(visible ? { visible } : {}),
       render: (setting) => {
+        let textControl;
         setting.addText((text) => {
+          textControl = text;
           text.setValue(String(this.getValue(key) ?? ''));
           text.onChange(async (value) => {
             this.setValue(key, value || this.getDefault(key));
             await this.plugin.saveSettings();
           });
         });
-        this.addResetButton(setting, key);
+        this.addResetButton(setting, key, (value) => textControl?.setValue(String(value ?? '')));
       },
     };
   }
@@ -1191,14 +1222,16 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
       aliases,
       ...(visible ? { visible } : {}),
       render: (setting) => {
+        let colorControl;
         setting.addColorPicker((picker) => {
+          colorControl = picker;
           picker.setValue(this.getValue(key) || this.getDefault(key));
           picker.onChange(async (value) => {
             this.setValue(key, value);
             await this.plugin.saveSettings();
           });
         });
-        this.addResetButton(setting, key);
+        this.addResetButton(setting, key, (value) => colorControl?.setValue(value || this.getDefault(key)));
       },
     };
   }
