@@ -1067,7 +1067,6 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
                   self.plugin.settings = JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
                   await self.plugin.saveSettings();
                   self.syncRenderedControlsToDefaults();
-                  self.refreshSettingsDom();
                 });
             });
           },
@@ -1098,6 +1097,42 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
     }
   }
 
+  // Obsidian Mobile can retain the old visual value in the native control even
+  // after the component's setValue() call succeeds. Update that element too so
+  // the selected palette, slider position, color swatch, and other controls
+  // immediately match the setting we just saved.
+  syncNativeControl(setting, type, value) {
+    const controlEl = setting?.controlEl;
+    if (!controlEl) return;
+
+    if (type === 'dropdown') {
+      const select = controlEl.querySelector('select');
+      if (select) select.value = String(value);
+      return;
+    }
+
+    if (type === 'toggle') {
+      const input = controlEl.querySelector('input[type="checkbox"]');
+      if (input) input.checked = Boolean(value);
+      return;
+    }
+
+    if (type === 'slider') {
+      const input = controlEl.querySelector('input[type="range"]');
+      if (input) input.value = String(value);
+      return;
+    }
+
+    if (type === 'color') {
+      const input = controlEl.querySelector('input[type="color"]');
+      if (input) input.value = String(value);
+      return;
+    }
+
+    const input = controlEl.querySelector('input:not([type="checkbox"]):not([type="range"]), textarea');
+    if (input) input.value = String(value ?? '');
+  }
+
   addResetButton(setting, key, updateControl) {
     this.registerControlResetUpdater(key, updateControl);
     setting.addExtraButton((button) => {
@@ -1109,7 +1144,6 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
           this.setValue(key, defaultValue);
           await this.plugin.saveSettings();
           updateControl?.(defaultValue);
-          this.refreshSettingsDom();
         });
     });
     return setting;
@@ -1133,7 +1167,10 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
             if (refreshOnChange) this.refreshSettingsDom();
           });
         });
-        this.addResetButton(setting, key, (value) => dropdownControl?.setValue(String(value)));
+        this.addResetButton(setting, key, (value) => {
+          dropdownControl?.setValue(String(value));
+          this.syncNativeControl(setting, 'dropdown', value);
+        });
       },
     };
   }
@@ -1155,7 +1192,10 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
             if (refreshOnChange) this.refreshSettingsDom();
           });
         });
-        this.addResetButton(setting, key, (value) => toggleControl?.setValue(Boolean(value)));
+        this.addResetButton(setting, key, (value) => {
+          toggleControl?.setValue(Boolean(value));
+          this.syncNativeControl(setting, 'toggle', value);
+        });
       },
     };
   }
@@ -1189,6 +1229,7 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
         this.addResetButton(setting, key, (value) => {
           sliderControl?.setValue(Number(value));
           valueEl?.setText(`${value}${suffix || ''}`);
+          this.syncNativeControl(setting, 'slider', value);
         });
       },
     };
@@ -1210,7 +1251,10 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
         });
-        this.addResetButton(setting, key, (value) => textControl?.setValue(String(value ?? '')));
+        this.addResetButton(setting, key, (value) => {
+          textControl?.setValue(String(value ?? ''));
+          this.syncNativeControl(setting, 'text', value);
+        });
       },
     };
   }
@@ -1231,7 +1275,11 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           });
         });
-        this.addResetButton(setting, key, (value) => colorControl?.setValue(value || this.getDefault(key)));
+        this.addResetButton(setting, key, (value) => {
+          const nextValue = value || this.getDefault(key);
+          colorControl?.setValue(nextValue);
+          this.syncNativeControl(setting, 'color', nextValue);
+        });
       },
     };
   }
