@@ -893,6 +893,24 @@ body:is(.appearance-border,.appearance-both):not(.show-bottom-border) .nav-file-
   border-bottom: 0 none transparent;
 }
 
+/* Obsidian Mobile applies a more specific row border reset in the File
+   Explorer. Repeat the enabled sides with the full explorer scope and
+   !important so the user-selected left/right borders remain visible on iPad
+   and iPhone as well as desktop. */
+body.folder-color-system-active.appearance-border.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
+body.folder-color-system-active.appearance-border.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title,
+body.folder-color-system-active.appearance-both.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
+body.folder-color-system-active.appearance-both.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
+  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+}
+
+body.folder-color-system-active.appearance-border.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
+body.folder-color-system-active.appearance-border.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title,
+body.folder-color-system-active.appearance-both.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
+body.folder-color-system-active.appearance-both.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
+  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+}
+
 /*
    Some themes paint the tiny right-side curl with ::after rather than with
    border-right. Disable that decoration whenever our right-side dot is off.
