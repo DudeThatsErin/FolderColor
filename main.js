@@ -1,4 +1,4 @@
-const { Plugin, PluginSettingTab, Setting, setIcon } = require('obsidian');
+const { Plugin, PluginSettingTab, Setting, Modal, Notice, TFolder, setIcon } = require('obsidian');
 
 const PALETTE_OPTIONS = [
   ['palette-pink', 'Pink / Purple'],
@@ -234,10 +234,12 @@ const CSS_VARIABLES = [
 ];
 
 const DEFAULT_SETTINGS = {
-  settingsSchemaVersion: 4,
+  settingsSchemaVersion: 5,
   palette: 'palette-pink',
   customColorsDark: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
   customColorsLight: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
+  // Path -> hex colour, or null when that folder should stay uncoloured.
+  folderColorOverrides: {},
 
   visualStyle: 'appearance-background',
   backgroundColorMode: 'background-folder-color',
@@ -438,7 +440,10 @@ function migrateSettings(saved) {
     migrateOldIconDefaults('folderIconColorDark', 'folderIconColorLight');
     migrateOldIconDefaults('fileIconColorDark', 'fileIconColorLight');
   }
-  migrated.settingsSchemaVersion = 4;
+  if (!migrated.folderColorOverrides || typeof migrated.folderColorOverrides !== 'object' || Array.isArray(migrated.folderColorOverrides)) {
+    migrated.folderColorOverrides = {};
+  }
+  migrated.settingsSchemaVersion = 5;
 
   delete migrated.customColors;
   return migrated;
@@ -455,6 +460,17 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     document.body.classList.add('folder-color-system-active');
     this.applySettings();
     this.addSettingTab(new FolderColorSystemSettingTab(this.app, this));
+    this.registerEvent(this.app.workspace.on('file-menu', (menu, file) => {
+      if (!(file instanceof TFolder)) return;
+      const override = this.getFolderColorOverride(file.path);
+      menu.addSeparator();
+      menu.addItem((item) => item.setTitle('Set custom folder color…').setIcon('palette')
+        .onClick(() => new FolderColorOverrideModal(this, file.path, typeof override === 'string' ? override : '#7f6aa8').open()));
+      menu.addItem((item) => item.setTitle('No folder color').setIcon('ban').setChecked(override === null)
+        .onClick(() => this.setFolderColorOverride(file.path, null)));
+      if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
+        .onClick(() => this.clearFolderColorOverride(file.path)));
+    }));
 
     this.iconObserver = new MutationObserver(() => {
       if (!this._isUnloading) this.scheduleIconRefresh();
@@ -485,6 +501,26 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     await this.saveData(this.settings);
     this.applySettings();
     this.scheduleIconRefresh();
+  }
+
+  getFolderColorOverride(path) {
+    const overrides = this.settings?.folderColorOverrides;
+    return overrides && Object.prototype.hasOwnProperty.call(overrides, path) ? overrides[path] : undefined;
+  }
+
+  async setFolderColorOverride(path, color) {
+    if (!path) return;
+    if (!this.settings.folderColorOverrides || typeof this.settings.folderColorOverrides !== 'object') this.settings.folderColorOverrides = {};
+    this.settings.folderColorOverrides[path] = color;
+    await this.saveSettings();
+    new Notice(color === null ? `Folder Color System: ${path} will be uncoloured.` : `Folder Color System: custom colour saved for ${path}.`);
+  }
+
+  async clearFolderColorOverride(path) {
+    if (!this.settings.folderColorOverrides || !Object.prototype.hasOwnProperty.call(this.settings.folderColorOverrides, path)) return;
+    delete this.settings.folderColorOverrides[path];
+    await this.saveSettings();
+    new Notice(`Folder Color System: ${path} now uses the palette colour.`);
   }
 
   clearAppliedSettings() {
@@ -587,6 +623,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     const explorer = document.querySelector('.workspace-leaf-content[data-type="file-explorer"]');
     if (!explorer) return;
 
+    this.refreshFolderColorOverrides(explorer);
     this.refreshActiveFolderState(explorer);
 
     explorer.querySelectorAll('.nav-folder').forEach(folder => {
@@ -662,6 +699,18 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     });
   }
 
+  refreshFolderColorOverrides(explorer) {
+    const overrides = this.settings?.folderColorOverrides || {};
+    explorer.querySelectorAll('.nav-folder').forEach((folder) => {
+      const title = folder.querySelector(':scope > .nav-folder-title');
+      const path = title?.dataset?.path || folder.dataset?.path;
+      const override = path && Object.prototype.hasOwnProperty.call(overrides, path) ? overrides[path] : undefined;
+      folder.classList.toggle('fcs-no-color', override === null);
+      if (typeof override === 'string' && hexToRgbString(override, '') !== '') folder.style.setProperty('--fc', hexToRgbString(override));
+      else folder.style.removeProperty('--fc');
+    });
+  }
+
   getIconicFolderIcon(folder, title, collapse) {
     const iconic = this.getIconicPlugin();
     const path = title?.dataset?.path || folder?.dataset?.path || folder?.querySelector?.('[data-path]')?.dataset?.path;
@@ -695,6 +744,8 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     document.querySelectorAll('.fcs-uses-iconic-icon').forEach(el => el.classList.remove('fcs-uses-iconic-icon'));
     document.querySelectorAll('.fcs-has-file-icon').forEach(el => el.classList.remove('fcs-has-file-icon'));
     document.querySelectorAll('.fcs-active-folder').forEach(el => el.classList.remove('fcs-active-folder'));
+    document.querySelectorAll('.nav-folder.fcs-no-color').forEach((el) => el.classList.remove('fcs-no-color'));
+    document.querySelectorAll('.nav-folder').forEach((el) => el.style.removeProperty('--fc'));
   }
 
   applySettings() {
@@ -832,6 +883,21 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     this.setVar('--active-icon-stroke-width', String(clampNumber(s.activeIconThickness, 0.5, 4)));
   }
 };
+
+class FolderColorOverrideModal extends Modal {
+  constructor(plugin, path, color) { super(plugin.app); this.plugin = plugin; this.path = path; this.color = color; }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl('h2', { text: 'Custom folder color' });
+    contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
+    new Setting(contentEl).setName('Color').setDesc('This overrides the palette for this folder only.')
+      .addColorPicker((picker) => picker.setValue(this.color).onChange((value) => { this.color = value; }));
+    new Setting(contentEl).addButton((button) => button.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((button) => button.setButtonText('Save color').setCta().onClick(async () => { await this.plugin.setFolderColorOverride(this.path, this.color); this.close(); }));
+  }
+  onClose() { this.contentEl.empty(); }
+}
 
 class FolderColorSystemSettingTab extends PluginSettingTab {
   constructor(app, plugin) {

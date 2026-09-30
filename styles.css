@@ -895,20 +895,20 @@ body:is(.appearance-border,.appearance-both):not(.show-bottom-border) .nav-file-
 
 /* Obsidian Mobile applies a more specific row border reset in the File
    Explorer. Repeat the enabled sides with the full explorer scope and
-   !important so the user-selected left/right borders remain visible on iPad
-   and iPhone as well as desktop. */
-body.folder-color-system-active.appearance-border.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.folder-color-system-active.appearance-border.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title,
-body.folder-color-system-active.appearance-both.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.folder-color-system-active.appearance-both.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
-  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+   selector specificity so the user-selected left/right borders remain visible on
+   iPad and iPhone as well as desktop. */
+body.folder-color-system-active.appearance-border.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder > .nav-folder-title,
+body.folder-color-system-active.appearance-border.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-file > .nav-file-title,
+body.folder-color-system-active.appearance-both.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder > .nav-folder-title,
+body.folder-color-system-active.appearance-both.show-left-border .workspace-leaf-content[data-type="file-explorer"] .nav-file > .nav-file-title {
+  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
 
-body.folder-color-system-active.appearance-border.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.folder-color-system-active.appearance-border.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title,
-body.folder-color-system-active.appearance-both.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder-title,
-body.folder-color-system-active.appearance-both.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-file-title {
-  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+body.folder-color-system-active.appearance-border.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder > .nav-folder-title,
+body.folder-color-system-active.appearance-border.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-file > .nav-file-title,
+body.folder-color-system-active.appearance-both.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-folder > .nav-folder-title,
+body.folder-color-system-active.appearance-both.right-border .workspace-leaf-content[data-type="file-explorer"] .nav-file > .nav-file-title {
+  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
 
 /*
@@ -1430,3 +1430,22 @@ body.folder-color-system-active.active-show-icon
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+
+
+/* Per-folder overrides are set by Folder Color System's folder context menu. */
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color > .nav-folder-title {
+  background: transparent;
+  background-image: none;
+  border: 0 none transparent;
+  box-shadow: none;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color > .nav-folder-title::after {
+  content: none;
+  display: none;
+}
+body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color .fcs-folder-icon,
+body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color .fcs-folder-icon svg {
+  color: var(--text-color);
+  stroke: var(--text-color);
+}
+.fcs-folder-color-path { overflow-wrap: anywhere; color: var(--text-muted); }
