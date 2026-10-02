@@ -570,7 +570,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
             new FolderColorOverrideModal(this, file.path, parsed.color || '#7f6aa8', parsed.inherit).open();
           }));
         menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(parseColorOverride(override).noColor)
-          .onClick(() => new NoColorOptionsModal(this, file.path, override).open()));
+          .onClick(() => new NoColorOptionsModal(this.app, this, file.path, override).open()));
         if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
           .onClick(() => this.clearFolderColorOverride(file.path)));
         menu.addItem((item) => item.setTitle('Set custom folder icon…').setIcon('image')
