@@ -1445,10 +1445,14 @@ body.folder-color-system-active.active-show-icon
 /* A no-colour override cascades to its contents, unless a closer folder
    override restores a custom colour. */
 body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color > :is(.nav-folder-title, .nav-file-title) {
-  background: transparent;
-  background-image: none;
-  border: 0 none transparent;
-  box-shadow: none;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 none transparent !important;
+  border-left: 0 none transparent !important;
+  border-right: 0 none transparent !important;
+  border-top: 0 none transparent !important;
+  border-bottom: 0 none transparent !important;
+  box-shadow: none !important;
 }
 body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color > :is(.nav-folder-title, .nav-file-title)::after {
   content: none;
