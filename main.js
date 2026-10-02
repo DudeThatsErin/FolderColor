@@ -1525,14 +1525,19 @@ class NoColorOptionsModal extends Modal {
     const buttonRow = new Setting(contentEl);
     buttonRow.addButton((btn) => btn.setButtonText('Save').setCta().onClick(async () => {
       await this.plugin.setFolderColorOverride(this.path, { noColor: true, inherit, keepBorder });
+      this.plugin.refreshFolderColorOverrides();
       this.close();
     }));
     buttonRow.addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()));
     if (parsed.noColor) {
       buttonRow.addButton((btn) => btn.setButtonText('Remove no-color').setWarning().onClick(async () => {
-        delete this.plugin.settings.folderColorOverrides[this.path];
-        await this.plugin.saveSettings();
-        this.plugin.refreshFolderColorOverrides();
+        try {
+          if (this.plugin.settings.folderColorOverrides) {
+            delete this.plugin.settings.folderColorOverrides[this.path];
+          }
+          await this.plugin.saveSettings();
+          this.plugin.refreshFolderColorOverrides();
+        } catch (e) { console.error('FolderColor: remove no-color error', e); }
         this.close();
       }));
     }
