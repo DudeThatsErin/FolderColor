@@ -444,13 +444,23 @@ function resolveOverrideIcon(value) {
 }
 
 function parseColorOverride(override) {
-  if (override === null) return { noColor: true, color: null, inherit: true, keepBorder: false };
-  if (typeof override === 'string') return { noColor: false, color: override, inherit: false, keepBorder: false };
+  const base = { noColor: false, color: null, inherit: false, keepBorder: false, bgOpacity: null, borderEnabled: false, borderColor: null, borderOpacity: null, borderSides: null };
+  if (override === null) return { ...base, noColor: true, inherit: true };
+  if (typeof override === 'string') return { ...base, color: override };
   if (override && typeof override === 'object') {
-    if (override.noColor) return { noColor: true, color: null, inherit: Boolean(override.inherit !== false), keepBorder: Boolean(override.keepBorder) };
-    return { noColor: false, color: override.color || null, inherit: Boolean(override.inherit), keepBorder: false };
+    if (override.noColor) return { ...base, noColor: true, inherit: Boolean(override.inherit !== false), keepBorder: Boolean(override.keepBorder) };
+    return {
+      ...base,
+      color: override.color || null,
+      inherit: Boolean(override.inherit),
+      bgOpacity: (typeof override.bgOpacity === 'number') ? override.bgOpacity : null,
+      borderEnabled: Boolean(override.borderEnabled),
+      borderColor: override.borderColor || null,
+      borderOpacity: (typeof override.borderOpacity === 'number') ? override.borderOpacity : null,
+      borderSides: override.borderSides || null,
+    };
   }
-  return { noColor: false, color: null, inherit: false, keepBorder: false };
+  return base;
 }
 
 function hexToRgbString(value, fallback = '0,0,0') {
@@ -565,10 +575,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         const override = this.getFolderColorOverride(file.path);
         menu.addSeparator();
         menu.addItem((item) => item.setTitle('Set custom folder color…').setIcon('palette')
-          .onClick(() => {
-            const parsed = parseColorOverride(override);
-            new FolderColorOverrideModal(this, file.path, parsed.color || '#7f6aa8', parsed.inherit).open();
-          }));
+          .onClick(() => new FolderColorOverrideModal(this, file.path, override).open()));
         menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(parseColorOverride(override).noColor)
           .onClick(() => new NoColorOptionsModal(this.app, this, file.path, override).open()));
         if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
@@ -879,6 +886,8 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     if (!explorer) return;
     const overrides = this.settings?.folderColorOverrides || {};
 
+    const BORDER_SIDE_CLASSES = ['fcs-border-left','fcs-no-border-left','fcs-border-right','fcs-no-border-right','fcs-border-top','fcs-no-border-top','fcs-border-bottom','fcs-no-border-bottom'];
+
     // First pass: apply direct overrides only.
     explorer.querySelectorAll('.nav-folder').forEach((folder) => {
       const title = folder.querySelector(':scope > .nav-folder-title');
@@ -887,6 +896,31 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       const parsed = parseColorOverride(raw);
       if (!parsed.noColor && parsed.color && hexToRgbString(parsed.color, '') !== '') folder.style.setProperty('--fc', hexToRgbString(parsed.color));
       else folder.style.removeProperty('--fc');
+
+      // Per-folder background opacity.
+      if (parsed.bgOpacity !== null) folder.style.setProperty('--background-opacity', String(parsed.bgOpacity));
+      else folder.style.removeProperty('--background-opacity');
+
+      // Per-folder border overrides.
+      if (parsed.borderEnabled) {
+        if (parsed.borderColor) folder.style.setProperty('--row-border-color', hexToRgbString(parsed.borderColor));
+        else folder.style.removeProperty('--row-border-color');
+        if (parsed.borderOpacity !== null) folder.style.setProperty('--border-opacity', String(parsed.borderOpacity));
+        else folder.style.removeProperty('--border-opacity');
+        const s = parsed.borderSides || { left: true, right: false, top: false, bottom: false };
+        folder.classList.toggle('fcs-border-left', s.left);
+        folder.classList.toggle('fcs-no-border-left', !s.left);
+        folder.classList.toggle('fcs-border-right', s.right);
+        folder.classList.toggle('fcs-no-border-right', !s.right);
+        folder.classList.toggle('fcs-border-top', s.top);
+        folder.classList.toggle('fcs-no-border-top', !s.top);
+        folder.classList.toggle('fcs-border-bottom', s.bottom);
+        folder.classList.toggle('fcs-no-border-bottom', !s.bottom);
+      } else {
+        folder.style.removeProperty('--row-border-color');
+        folder.style.removeProperty('--border-opacity');
+        BORDER_SIDE_CLASSES.forEach(c => folder.classList.remove(c));
+      }
     });
 
     // Second pass: propagate inherited custom colors to descendant folders.
@@ -1034,7 +1068,13 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     document.querySelectorAll('.fcs-active-folder').forEach(el => el.classList.remove('fcs-active-folder'));
     document.querySelectorAll('.nav-folder.fcs-no-color, .nav-file.fcs-no-color').forEach((el) => el.classList.remove('fcs-no-color'));
     document.querySelectorAll('.nav-folder.fcs-no-color-keep-border, .nav-file.fcs-no-color-keep-border').forEach((el) => el.classList.remove('fcs-no-color-keep-border'));
-    document.querySelectorAll('.nav-folder, .nav-file').forEach((el) => el.style.removeProperty('--fc'));
+    document.querySelectorAll('.nav-folder, .nav-file').forEach((el) => {
+      el.style.removeProperty('--fc');
+      el.style.removeProperty('--background-opacity');
+      el.style.removeProperty('--row-border-color');
+      el.style.removeProperty('--border-opacity');
+      ['fcs-border-left','fcs-no-border-left','fcs-border-right','fcs-no-border-right','fcs-border-top','fcs-no-border-top','fcs-border-bottom','fcs-no-border-bottom'].forEach(c => el.classList.remove(c));
+    });
     document.querySelectorAll('.nav-folder-title, .nav-file-title').forEach((el) => el.style.removeProperty('--fcs-text'));
   }
 
@@ -1175,26 +1215,89 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
 };
 
 class FolderColorOverrideModal extends Modal {
-  constructor(plugin, path, color, inherit = false) { super(plugin.app); this.plugin = plugin; this.path = path; this.color = color; this.inherit = inherit; }
+  constructor(plugin, path, rawOverride) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.path = path;
+    const p = parseColorOverride(rawOverride);
+    this.color = p.color || '#7f6aa8';
+    this.bgOpacity = p.bgOpacity !== null ? p.bgOpacity : 1;
+    this.inherit = p.inherit;
+    this.borderEnabled = p.borderEnabled;
+    this.borderColor = p.borderColor || this.color;
+    this.borderOpacity = p.borderOpacity !== null ? p.borderOpacity : 1;
+    const s = p.borderSides || { left: true, right: false, top: false, bottom: false };
+    this.borderSides = { left: s.left, right: s.right, top: s.top, bottom: s.bottom };
+  }
   onOpen() {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.createEl('h2', { text: 'Custom folder color' });
     contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
-    new Setting(contentEl).setName('Color').setDesc('This overrides the palette for this folder only.')
-      .addColorPicker((picker) => picker.setValue(this.color).onChange((value) => { this.color = value; }));
+
+    // Background color
+    new Setting(contentEl).setName('Color').setDesc('Overrides the palette for this folder only.')
+      .addColorPicker((picker) => picker.setValue(this.color).onChange((v) => { this.color = v; }));
+
+    // Background opacity
+    new Setting(contentEl).setName('Background opacity').setDesc('0 = fully transparent, 1 = fully opaque.')
+      .addSlider((sl) => sl.setLimits(0, 1, 0.05).setValue(this.bgOpacity).setDynamicTooltip()
+        .onChange((v) => { this.bgOpacity = v; }));
+
+    // Inherit
     new Setting(contentEl).setName('Apply to folder contents').setDesc('Also applies this color to files and subfolders inside this folder.')
-      .addToggle((toggle) => toggle.setValue(this.inherit).onChange((value) => { this.inherit = value; }));
+      .addToggle((t) => t.setValue(this.inherit).onChange((v) => { this.inherit = v; }));
+
+    // Border section heading
+    contentEl.createEl('h3', { text: 'Border', cls: 'fcs-modal-section-heading' });
+
+    // Override border toggle
+    const borderContainer = contentEl.createDiv();
+    const showBorderSettings = () => {
+      borderContainer.empty();
+      if (!this.borderEnabled) return;
+
+      new Setting(borderContainer).setName('Border color').setDesc('Custom color for this folder\'s border.')
+        .addColorPicker((picker) => picker.setValue(this.borderColor).onChange((v) => { this.borderColor = v; }));
+
+      new Setting(borderContainer).setName('Border opacity').setDesc('0 = fully transparent, 1 = fully opaque.')
+        .addSlider((sl) => sl.setLimits(0, 1, 0.05).setValue(this.borderOpacity).setDynamicTooltip()
+          .onChange((v) => { this.borderOpacity = v; }));
+
+      new Setting(borderContainer).setName('Show left border').addToggle((t) => t.setValue(this.borderSides.left).onChange((v) => { this.borderSides.left = v; }));
+      new Setting(borderContainer).setName('Show right border').addToggle((t) => t.setValue(this.borderSides.right).onChange((v) => { this.borderSides.right = v; }));
+      new Setting(borderContainer).setName('Show top border').addToggle((t) => t.setValue(this.borderSides.top).onChange((v) => { this.borderSides.top = v; }));
+      new Setting(borderContainer).setName('Show bottom border').addToggle((t) => t.setValue(this.borderSides.bottom).onChange((v) => { this.borderSides.bottom = v; }));
+    };
+
+    new Setting(contentEl).setName('Override border settings').setDesc('Set custom border color, opacity, and sides for this folder.')
+      .addToggle((t) => t.setValue(this.borderEnabled).onChange((v) => { this.borderEnabled = v; showBorderSettings(); }));
+
+    // Insert border sub-settings container right after the toggle
+    contentEl.appendChild(borderContainer);
+    showBorderSettings();
+
+    // Buttons
     const buttonSetting = new Setting(contentEl)
-      .addButton((button) => button.setButtonText('Cancel').onClick(() => this.close()))
-      .addButton((button) => button.setButtonText('Save color').setCta().onClick(async () => {
-        const value = this.inherit ? { color: this.color, inherit: true } : this.color;
+      .addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((btn) => btn.setButtonText('Save color').setCta().onClick(async () => {
+        const value = {
+          color: this.color,
+          bgOpacity: this.bgOpacity,
+          inherit: this.inherit,
+          borderEnabled: this.borderEnabled,
+          borderColor: this.borderEnabled ? this.borderColor : null,
+          borderOpacity: this.borderEnabled ? this.borderOpacity : null,
+          borderSides: this.borderEnabled ? { ...this.borderSides } : null,
+        };
         await this.plugin.setFolderColorOverride(this.path, value);
+        this.plugin.refreshFolderColorOverrides();
         this.close();
       }));
     if (this.plugin.getFolderColorOverride(this.path) !== undefined) {
-      buttonSetting.addButton((button) => button.setButtonText('Remove custom color').setWarning().onClick(async () => {
+      buttonSetting.addButton((btn) => btn.setButtonText('Remove custom color').setWarning().onClick(async () => {
         await this.plugin.clearFolderColorOverride(this.path);
+        this.plugin.refreshFolderColorOverrides();
         this.close();
       }));
     }

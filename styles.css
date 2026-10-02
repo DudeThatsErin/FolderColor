@@ -1478,6 +1478,33 @@ body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type=
   stroke: var(--text-color);
 }
 .fcs-folder-color-path { overflow-wrap: anywhere; color: var(--text-muted); }
+.fcs-modal-section-heading { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin: 1em 0 0.25em; }
+
+/* Per-folder border side overrides */
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-left > .nav-folder-title {
+  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-left > .nav-folder-title {
+  border-left: 0 none transparent !important;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-right > .nav-folder-title {
+  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-right > .nav-folder-title {
+  border-right: 0 none transparent !important;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-top > .nav-folder-title {
+  border-top: var(--top-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-top > .nav-folder-title {
+  border-top: 0 none transparent !important;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-bottom > .nav-folder-title {
+  border-bottom: var(--bottom-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-bottom > .nav-folder-title {
+  border-bottom: 0 none transparent !important;
+}
 
 /* Icon picker modal */
 .fcs-icon-picker-modal {
