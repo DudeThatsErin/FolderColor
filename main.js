@@ -907,22 +907,27 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     });
 
     explorer.querySelectorAll('.nav-folder, .nav-file').forEach((item) => {
-      const folder = item.classList.contains('nav-folder') ? item : item.parentElement?.closest('.nav-folder');
-      let currentFolder = folder;
+      const isFolder = item.classList.contains('nav-folder');
       let noColor = false;
       let keepBorder = false;
 
-      // The closest folder override wins. A child can therefore opt back into
-      // a custom colour beneath an uncoloured parent.
+      // Walk up from the item (or its parent folder for files) to find the closest
+      // folder override. A folder's own override always applies to itself; ancestor
+      // overrides only apply when their inherit flag is true.
+      let currentFolder = isFolder ? item : item.parentElement?.closest('.nav-folder');
+      let isSelf = isFolder; // first iteration is self only for folder items
       while (currentFolder) {
         const title = currentFolder.querySelector(':scope > .nav-folder-title');
         const path = title?.dataset?.path || currentFolder.dataset?.path;
         if (path && Object.prototype.hasOwnProperty.call(overrides, path)) {
           const parsed = parseColorOverride(overrides[path]);
-          noColor = parsed.noColor;
-          keepBorder = parsed.keepBorder;
+          if (isSelf || parsed.inherit) {
+            noColor = parsed.noColor;
+            keepBorder = parsed.keepBorder;
+          }
           break;
         }
+        isSelf = false;
         currentFolder = currentFolder.parentElement?.closest('.nav-folder');
       }
 
