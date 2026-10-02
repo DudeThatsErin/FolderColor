@@ -359,6 +359,13 @@ const DEFAULT_SETTINGS = {
   activeIconThickness: 1.5
 };
 
+function parseColorOverride(override) {
+  if (override === null) return { noColor: true, color: null, inherit: false };
+  if (typeof override === 'string') return { noColor: false, color: override, inherit: false };
+  if (override && typeof override === 'object') return { noColor: false, color: override.color || null, inherit: Boolean(override.inherit) };
+  return { noColor: false, color: null, inherit: false };
+}
+
 function hexToRgbString(value, fallback = '0,0,0') {
   if (!value || typeof value !== 'string') return fallback;
   let hex = value.trim();
@@ -465,7 +472,10 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       const override = this.getFolderColorOverride(file.path);
       menu.addSeparator();
       menu.addItem((item) => item.setTitle('Set custom folder color…').setIcon('palette')
-        .onClick(() => new FolderColorOverrideModal(this, file.path, typeof override === 'string' ? override : '#7f6aa8').open()));
+        .onClick(() => {
+          const parsed = parseColorOverride(override);
+          new FolderColorOverrideModal(this, file.path, parsed.color || '#7f6aa8', parsed.inherit).open();
+        }));
       menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(override === null)
         .onClick(() => this.setFolderColorOverride(file.path, null)));
       if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
@@ -701,12 +711,32 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
 
   refreshFolderColorOverrides(explorer) {
     const overrides = this.settings?.folderColorOverrides || {};
+
+    // First pass: apply direct overrides only.
     explorer.querySelectorAll('.nav-folder').forEach((folder) => {
       const title = folder.querySelector(':scope > .nav-folder-title');
       const path = title?.dataset?.path || folder.dataset?.path;
-      const override = path && Object.prototype.hasOwnProperty.call(overrides, path) ? overrides[path] : undefined;
-      if (typeof override === 'string' && hexToRgbString(override, '') !== '') folder.style.setProperty('--fc', hexToRgbString(override));
+      const raw = path && Object.prototype.hasOwnProperty.call(overrides, path) ? overrides[path] : undefined;
+      const parsed = parseColorOverride(raw);
+      if (!parsed.noColor && parsed.color && hexToRgbString(parsed.color, '') !== '') folder.style.setProperty('--fc', hexToRgbString(parsed.color));
       else folder.style.removeProperty('--fc');
+    });
+
+    // Second pass: propagate inherited custom colors to descendant folders.
+    explorer.querySelectorAll('.nav-folder').forEach((folder) => {
+      const title = folder.querySelector(':scope > .nav-folder-title');
+      const path = title?.dataset?.path || folder.dataset?.path;
+      const raw = path && Object.prototype.hasOwnProperty.call(overrides, path) ? overrides[path] : undefined;
+      const parsed = parseColorOverride(raw);
+      if (!parsed.inherit || !parsed.color) return;
+      const rgbVal = hexToRgbString(parsed.color, '');
+      if (!rgbVal) return;
+      folder.querySelectorAll('.nav-folder').forEach((child) => {
+        const childTitle = child.querySelector(':scope > .nav-folder-title');
+        const childPath = childTitle?.dataset?.path || child.dataset?.path;
+        if (childPath && Object.prototype.hasOwnProperty.call(overrides, childPath)) return; // child has its own override
+        child.style.setProperty('--fc', rgbVal);
+      });
     });
 
     explorer.querySelectorAll('.nav-folder, .nav-file').forEach((item) => {
@@ -720,7 +750,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         const title = currentFolder.querySelector(':scope > .nav-folder-title');
         const path = title?.dataset?.path || currentFolder.dataset?.path;
         if (path && Object.prototype.hasOwnProperty.call(overrides, path)) {
-          noColor = overrides[path] === null;
+          noColor = parseColorOverride(overrides[path]).noColor;
           break;
         }
         currentFolder = currentFolder.parentElement?.closest('.nav-folder');
@@ -904,7 +934,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
 };
 
 class FolderColorOverrideModal extends Modal {
-  constructor(plugin, path, color) { super(plugin.app); this.plugin = plugin; this.path = path; this.color = color; }
+  constructor(plugin, path, color, inherit = false) { super(plugin.app); this.plugin = plugin; this.path = path; this.color = color; this.inherit = inherit; }
   onOpen() {
     const { contentEl } = this;
     contentEl.empty();
@@ -912,8 +942,21 @@ class FolderColorOverrideModal extends Modal {
     contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
     new Setting(contentEl).setName('Color').setDesc('This overrides the palette for this folder only.')
       .addColorPicker((picker) => picker.setValue(this.color).onChange((value) => { this.color = value; }));
-    new Setting(contentEl).addButton((button) => button.setButtonText('Cancel').onClick(() => this.close()))
-      .addButton((button) => button.setButtonText('Save color').setCta().onClick(async () => { await this.plugin.setFolderColorOverride(this.path, this.color); this.close(); }));
+    new Setting(contentEl).setName('Apply to folder contents').setDesc('Also applies this color to files and subfolders inside this folder.')
+      .addToggle((toggle) => toggle.setValue(this.inherit).onChange((value) => { this.inherit = value; }));
+    const buttonSetting = new Setting(contentEl)
+      .addButton((button) => button.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((button) => button.setButtonText('Save color').setCta().onClick(async () => {
+        const value = this.inherit ? { color: this.color, inherit: true } : this.color;
+        await this.plugin.setFolderColorOverride(this.path, value);
+        this.close();
+      }));
+    if (this.plugin.getFolderColorOverride(this.path) !== undefined) {
+      buttonSetting.addButton((button) => button.setButtonText('Remove custom color').setWarning().onClick(async () => {
+        await this.plugin.clearFolderColorOverride(this.path);
+        this.close();
+      }));
+    }
   }
   onClose() { this.contentEl.empty(); }
 }
