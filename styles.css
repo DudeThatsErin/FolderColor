@@ -1443,18 +1443,20 @@ body.folder-color-system-active.active-show-icon
 
 
 /* A no-colour override cascades to its contents, unless a closer folder
-   override restores a custom colour. */
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color > :is(.nav-folder-title, .nav-file-title) {
-  background: transparent !important;
-  background-image: none !important;
-  border: 0 none transparent !important;
-  border-left: 0 none transparent !important;
-  border-right: 0 none transparent !important;
-  border-top: 0 none transparent !important;
-  border-bottom: 0 none transparent !important;
-  box-shadow: none !important;
+   override restores a custom colour.
+   Selectors repeat .fcs-no-color to reach specificity (0,7,1), matching the
+   high-specificity border rules so source order (later = wins) applies. */
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color.fcs-no-color > :is(.nav-folder-title, .nav-file-title) {
+  background: transparent;
+  background-image: none;
+  border: 0 none transparent;
+  border-left: 0 none transparent;
+  border-right: 0 none transparent;
+  border-top: 0 none transparent;
+  border-bottom: 0 none transparent;
+  box-shadow: none;
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color > :is(.nav-folder-title, .nav-file-title)::after {
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color.fcs-no-color > :is(.nav-folder-title, .nav-file-title)::after {
   content: none;
   display: none;
 }
@@ -1480,30 +1482,32 @@ body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type=
 .fcs-folder-color-path { overflow-wrap: anywhere; color: var(--text-muted); }
 .fcs-modal-section-heading { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin: 1em 0 0.25em; }
 
-/* Per-folder border side overrides */
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-left > .nav-folder-title {
-  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+/* Per-folder border side overrides.
+   Repeat the fcs-border-* class to reach (0,7,1) specificity so source
+   order (these rules are last) beats the high-specificity border rules. */
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-left.fcs-border-left > .nav-folder-title {
+  border-left: var(--left-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-left > .nav-folder-title {
-  border-left: 0 none transparent !important;
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-left.fcs-no-border-left > .nav-folder-title {
+  border-left: 0 none transparent;
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-right > .nav-folder-title {
-  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-right.fcs-border-right > .nav-folder-title {
+  border-right: var(--right-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-right > .nav-folder-title {
-  border-right: 0 none transparent !important;
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-right.fcs-no-border-right > .nav-folder-title {
+  border-right: 0 none transparent;
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-top > .nav-folder-title {
-  border-top: var(--top-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-top.fcs-border-top > .nav-folder-title {
+  border-top: var(--top-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-top > .nav-folder-title {
-  border-top: 0 none transparent !important;
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-top.fcs-no-border-top > .nav-folder-title {
+  border-top: 0 none transparent;
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-bottom > .nav-folder-title {
-  border-bottom: var(--bottom-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity)) !important;
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-border-bottom.fcs-border-bottom > .nav-folder-title {
+  border-bottom: var(--bottom-border-width) var(--border-line-style) rgba(var(--row-border-color), var(--border-opacity));
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-bottom > .nav-folder-title {
-  border-bottom: 0 none transparent !important;
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-border-bottom.fcs-no-border-bottom > .nav-folder-title {
+  border-bottom: 0 none transparent;
 }
 
 /* Icon picker modal */
