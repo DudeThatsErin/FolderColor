@@ -897,16 +897,18 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       if (!parsed.noColor && parsed.color && hexToRgbString(parsed.color, '') !== '') folder.style.setProperty('--fc', hexToRgbString(parsed.color));
       else folder.style.removeProperty('--fc');
 
-      // Per-folder background opacity.
-      if (parsed.bgOpacity !== null) folder.style.setProperty('--background-opacity', String(parsed.bgOpacity));
-      else folder.style.removeProperty('--background-opacity');
+      // Set per-folder opacity and border vars on the TITLE element, not the folder,
+      // so CSS custom property inheritance doesn't bleed into child folder rows.
+      const titleEl = folder.querySelector(':scope > .nav-folder-title');
+      if (parsed.bgOpacity !== null) titleEl?.style.setProperty('--background-opacity', String(parsed.bgOpacity));
+      else titleEl?.style.removeProperty('--background-opacity');
 
       // Per-folder border overrides.
       if (parsed.borderEnabled) {
-        if (parsed.borderColor) folder.style.setProperty('--row-border-color', hexToRgbString(parsed.borderColor));
-        else folder.style.removeProperty('--row-border-color');
-        if (parsed.borderOpacity !== null) folder.style.setProperty('--border-opacity', String(parsed.borderOpacity));
-        else folder.style.removeProperty('--border-opacity');
+        if (parsed.borderColor) titleEl?.style.setProperty('--row-border-color', hexToRgbString(parsed.borderColor));
+        else titleEl?.style.removeProperty('--row-border-color');
+        if (parsed.borderOpacity !== null) titleEl?.style.setProperty('--border-opacity', String(parsed.borderOpacity));
+        else titleEl?.style.removeProperty('--border-opacity');
         const s = parsed.borderSides || { left: true, right: false, top: false, bottom: false };
         folder.classList.toggle('fcs-border-left', s.left);
         folder.classList.toggle('fcs-no-border-left', !s.left);
@@ -917,8 +919,8 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         folder.classList.toggle('fcs-border-bottom', s.bottom);
         folder.classList.toggle('fcs-no-border-bottom', !s.bottom);
       } else {
-        folder.style.removeProperty('--row-border-color');
-        folder.style.removeProperty('--border-opacity');
+        titleEl?.style.removeProperty('--row-border-color');
+        titleEl?.style.removeProperty('--border-opacity');
         BORDER_SIDE_CLASSES.forEach(c => folder.classList.remove(c));
       }
     });
@@ -1070,12 +1072,14 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     document.querySelectorAll('.nav-folder.fcs-no-color-keep-border, .nav-file.fcs-no-color-keep-border').forEach((el) => el.classList.remove('fcs-no-color-keep-border'));
     document.querySelectorAll('.nav-folder, .nav-file').forEach((el) => {
       el.style.removeProperty('--fc');
+      ['fcs-border-left','fcs-no-border-left','fcs-border-right','fcs-no-border-right','fcs-border-top','fcs-no-border-top','fcs-border-bottom','fcs-no-border-bottom'].forEach(c => el.classList.remove(c));
+    });
+    document.querySelectorAll('.nav-folder-title, .nav-file-title').forEach((el) => {
+      el.style.removeProperty('--fcs-text');
       el.style.removeProperty('--background-opacity');
       el.style.removeProperty('--row-border-color');
       el.style.removeProperty('--border-opacity');
-      ['fcs-border-left','fcs-no-border-left','fcs-border-right','fcs-no-border-right','fcs-border-top','fcs-no-border-top','fcs-border-bottom','fcs-no-border-bottom'].forEach(c => el.classList.remove(c));
     });
-    document.querySelectorAll('.nav-folder-title, .nav-file-title').forEach((el) => el.style.removeProperty('--fcs-text'));
   }
 
   applySettings() {
