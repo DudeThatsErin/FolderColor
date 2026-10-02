@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.0
+## 1.5.1
 
 - A no-colour folder now clears the palette styling from all nested folders and files.
 - A nested folder with its own custom colour can still restore colour for that branch.
