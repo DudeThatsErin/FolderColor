@@ -1432,19 +1432,20 @@ body.folder-color-system-active.active-show-icon
 }
 
 
-/* Per-folder overrides are set by Folder Color System's folder context menu. */
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color > .nav-folder-title {
+/* A no-colour override cascades to its contents, unless a closer folder
+   override restores a custom colour. */
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color > :is(.nav-folder-title, .nav-file-title) {
   background: transparent;
   background-image: none;
   border: 0 none transparent;
   box-shadow: none;
 }
-body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color > .nav-folder-title::after {
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color > :is(.nav-folder-title, .nav-file-title)::after {
   content: none;
   display: none;
 }
-body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color .fcs-folder-icon,
-body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .nav-folder.fcs-no-color .fcs-folder-icon svg {
+body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .fcs-no-color :is(.fcs-folder-icon, .fcs-file-icon),
+body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .fcs-no-color :is(.fcs-folder-icon, .fcs-file-icon) svg {
   color: var(--text-color);
   stroke: var(--text-color);
 }

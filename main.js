@@ -238,7 +238,7 @@ const DEFAULT_SETTINGS = {
   palette: 'palette-pink',
   customColorsDark: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
   customColorsLight: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
-  // Path -> hex colour, or null when that folder should stay uncoloured.
+  // Path -> hex colour, or null when that folder and its contents should stay uncoloured.
   folderColorOverrides: {},
 
   visualStyle: 'appearance-background',
@@ -466,7 +466,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       menu.addSeparator();
       menu.addItem((item) => item.setTitle('Set custom folder color…').setIcon('palette')
         .onClick(() => new FolderColorOverrideModal(this, file.path, typeof override === 'string' ? override : '#7f6aa8').open()));
-      menu.addItem((item) => item.setTitle('No folder color').setIcon('ban').setChecked(override === null)
+      menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(override === null)
         .onClick(() => this.setFolderColorOverride(file.path, null)));
       if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
         .onClick(() => this.clearFolderColorOverride(file.path)));
@@ -513,7 +513,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     if (!this.settings.folderColorOverrides || typeof this.settings.folderColorOverrides !== 'object') this.settings.folderColorOverrides = {};
     this.settings.folderColorOverrides[path] = color;
     await this.saveSettings();
-    new Notice(color === null ? `Folder Color System: ${path} will be uncoloured.` : `Folder Color System: custom colour saved for ${path}.`);
+    new Notice(color === null ? `Folder Color System: ${path} and its contents will be uncoloured.` : `Folder Color System: custom colour saved for ${path}.`);
   }
 
   async clearFolderColorOverride(path) {
@@ -705,9 +705,28 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       const title = folder.querySelector(':scope > .nav-folder-title');
       const path = title?.dataset?.path || folder.dataset?.path;
       const override = path && Object.prototype.hasOwnProperty.call(overrides, path) ? overrides[path] : undefined;
-      folder.classList.toggle('fcs-no-color', override === null);
       if (typeof override === 'string' && hexToRgbString(override, '') !== '') folder.style.setProperty('--fc', hexToRgbString(override));
       else folder.style.removeProperty('--fc');
+    });
+
+    explorer.querySelectorAll('.nav-folder, .nav-file').forEach((item) => {
+      const folder = item.classList.contains('nav-folder') ? item : item.parentElement?.closest('.nav-folder');
+      let currentFolder = folder;
+      let noColor = false;
+
+      // The closest folder override wins. A child can therefore opt back into
+      // a custom colour beneath an uncoloured parent.
+      while (currentFolder) {
+        const title = currentFolder.querySelector(':scope > .nav-folder-title');
+        const path = title?.dataset?.path || currentFolder.dataset?.path;
+        if (path && Object.prototype.hasOwnProperty.call(overrides, path)) {
+          noColor = overrides[path] === null;
+          break;
+        }
+        currentFolder = currentFolder.parentElement?.closest('.nav-folder');
+      }
+
+      item.classList.toggle('fcs-no-color', noColor);
     });
   }
 
@@ -744,7 +763,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     document.querySelectorAll('.fcs-uses-iconic-icon').forEach(el => el.classList.remove('fcs-uses-iconic-icon'));
     document.querySelectorAll('.fcs-has-file-icon').forEach(el => el.classList.remove('fcs-has-file-icon'));
     document.querySelectorAll('.fcs-active-folder').forEach(el => el.classList.remove('fcs-active-folder'));
-    document.querySelectorAll('.nav-folder.fcs-no-color').forEach((el) => el.classList.remove('fcs-no-color'));
+    document.querySelectorAll('.nav-folder.fcs-no-color, .nav-file.fcs-no-color').forEach((el) => el.classList.remove('fcs-no-color'));
     document.querySelectorAll('.nav-folder').forEach((el) => el.style.removeProperty('--fc'));
   }
 

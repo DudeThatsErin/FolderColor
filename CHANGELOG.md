@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.5.0
+
+- A no-colour folder now clears the palette styling from all nested folders and files.
+- A nested folder with its own custom colour can still restore colour for that branch.
+
 ## 1.4.3
 
 - Fixed duplicate file icons when Iconic and Folder Color System are both enabled.
