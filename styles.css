@@ -1462,15 +1462,58 @@ body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type=
 .fcs-folder-color-path { overflow-wrap: anywhere; color: var(--text-muted); }
 
 /* Icon picker modal */
-.fcs-icon-picker-modal .fcs-icon-picker-grid {
+.fcs-icon-picker-modal {
+  --fcs-picker-grid-max-h: 200px;
+}
+.fcs-picker-section-heading {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 16px 0 6px;
+}
+.fcs-emoji-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  max-height: 260px;
-  overflow-y: auto;
-  padding: 8px 0;
+  margin-bottom: 8px;
 }
-.fcs-icon-picker-modal .fcs-icon-option {
+.fcs-emoji-tab {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  background: var(--background-secondary);
+  transition: background 0.1s, color 0.1s;
+  user-select: none;
+}
+.fcs-emoji-tab:hover { background: var(--background-modifier-hover); color: var(--text-normal); }
+.fcs-emoji-tab.is-active { background: var(--interactive-accent); color: var(--text-on-accent); border-color: var(--interactive-accent); }
+.fcs-picker-search-row { margin-bottom: 6px; }
+.fcs-picker-search {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--background-modifier-border);
+  background: var(--background-primary);
+  color: var(--text-normal);
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.fcs-picker-search:focus { outline: none; border-color: var(--interactive-accent); }
+.fcs-icon-picker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  max-height: var(--fcs-picker-grid-max-h);
+  overflow-y: auto;
+  padding: 4px 0 8px;
+}
+.fcs-emoji-grid { --fcs-picker-grid-max-h: 180px; }
+.fcs-icon-option {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1480,11 +1523,13 @@ body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type=
   cursor: pointer;
   border: 1px solid transparent;
   transition: background 0.1s, border-color 0.1s;
+  font-size: 20px;
 }
-.fcs-icon-picker-modal .fcs-icon-option:hover {
+.fcs-icon-option:hover {
   background: var(--background-modifier-hover);
   border-color: var(--background-modifier-border);
 }
+.fcs-picker-empty { font-size: 13px; color: var(--text-muted); padding: 8px 0; }
 .fcs-icon-preview {
   display: flex;
   align-items: center;

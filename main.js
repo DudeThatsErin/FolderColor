@@ -71,6 +71,75 @@ const RIGHT_DECORATION_OPTIONS = [
   ['right-dot', 'Dot']
 ];
 
+const EMOJI_DATA = [
+  ['📁','folder','files'],['📂','open folder','files'],['🗂️','card index dividers','files'],
+  ['📋','clipboard','files'],['📌','pushpin','files'],['📎','paperclip','files'],
+  ['🔗','link','files'],['📝','memo','files'],['✏️','pencil','files'],['🖊️','pen','files'],
+  ['📖','open book','files'],['📚','books','files'],['📒','ledger','files'],['📓','notebook','files'],
+  ['📔','notebook cover','files'],['📕','closed book','files'],['📗','green book','files'],
+  ['📘','blue book','files'],['📙','orange book','files'],['📄','page','files'],['📃','page curl','files'],
+  ['🗒️','spiral notepad','files'],['🗓️','spiral calendar','files'],['📆','tear-off calendar','files'],
+  ['📅','calendar','files'],['🗑️','wastebasket','files'],['💼','briefcase','files'],
+  ['🗃️','card file box','files'],['🗄️','file cabinet','files'],['📥','inbox','files'],
+  ['📤','outbox','files'],['📦','package','files'],['🏷️','label','files'],['🔖','bookmark','files'],
+  ['🌿','herb','nature'],['🌱','seedling','nature'],['🍀','four leaf clover','nature'],
+  ['🌸','cherry blossom','nature'],['🌺','hibiscus','nature'],['🌻','sunflower','nature'],
+  ['🌼','blossom','nature'],['🌹','rose','nature'],['🌷','tulip','nature'],
+  ['🍁','maple leaf','nature'],['🍂','fallen leaf','nature'],['🍃','leaf fluttering','nature'],
+  ['🌲','evergreen tree','nature'],['🌳','deciduous tree','nature'],['🌴','palm tree','nature'],
+  ['🌵','cactus','nature'],['🦋','butterfly','nature'],['🐝','honeybee','nature'],
+  ['🐉','dragon','nature'],['🦊','fox','nature'],['🐺','wolf','nature'],['🦁','lion','nature'],
+  ['⭐','star','nature'],['🌟','glowing star','nature'],['💫','dizzy','nature'],
+  ['✨','sparkles','nature'],['🌙','crescent moon','nature'],['🌈','rainbow','nature'],
+  ['☀️','sun','nature'],['🌊','wave','nature'],['🔥','fire','nature'],
+  ['❄️','snowflake','nature'],['💧','droplet','nature'],['🌍','earth globe','nature'],
+  ['⛰️','mountain','nature'],['🏔️','snow capped mountain','nature'],['🌋','volcano','nature'],
+  ['💡','light bulb','objects'],['🔑','key','objects'],['🔒','locked','objects'],
+  ['🔓','unlocked','objects'],['🔔','bell','objects'],['📢','loudspeaker','objects'],
+  ['🎯','direct hit','objects'],['🏆','trophy','objects'],['🥇','gold medal','objects'],
+  ['💰','money bag','objects'],['💎','gem stone','objects'],['🔮','crystal ball','objects'],
+  ['🧲','magnet','objects'],['🔭','telescope','objects'],['🔬','microscope','objects'],
+  ['🎨','artist palette','objects'],['🖼️','framed picture','objects'],
+  ['🎵','musical note','objects'],['🎶','musical notes','objects'],['🎸','guitar','objects'],
+  ['🎮','video game','objects'],['🕹️','joystick','objects'],['🎲','game die','objects'],
+  ['🧩','puzzle piece','objects'],['🏠','house','objects'],['🏡','house garden','objects'],
+  ['🏢','office building','objects'],['🏛️','classical building','objects'],
+  ['🚀','rocket','objects'],['✈️','airplane','objects'],['🚂','train','objects'],
+  ['⚙️','gear','objects'],['🛠️','hammer wrench','objects'],['🔧','wrench','objects'],
+  ['🔨','hammer','objects'],['⚗️','alembic','objects'],['🧪','test tube','objects'],
+  ['📡','satellite antenna','objects'],['💻','laptop','objects'],['🖥️','desktop computer','objects'],
+  ['⌨️','keyboard','objects'],['🖱️','mouse','objects'],['📱','mobile phone','objects'],
+  ['🎁','gift','objects'],['🎀','ribbon','objects'],['🎉','party popper','objects'],['🎊','confetti','objects'],
+  ['❤️','red heart','symbols'],['🧡','orange heart','symbols'],['💛','yellow heart','symbols'],
+  ['💚','green heart','symbols'],['💙','blue heart','symbols'],['💜','purple heart','symbols'],
+  ['🖤','black heart','symbols'],['🤍','white heart','symbols'],['💔','broken heart','symbols'],
+  ['✅','check mark','symbols'],['❌','cross mark','symbols'],['⚡','lightning','symbols'],
+  ['💥','collision','symbols'],['⚠️','warning','symbols'],['🚫','prohibited','symbols'],
+  ['🔴','red circle','symbols'],['🟠','orange circle','symbols'],['🟡','yellow circle','symbols'],
+  ['🟢','green circle','symbols'],['🔵','blue circle','symbols'],['🟣','purple circle','symbols'],
+  ['⚫','black circle','symbols'],['⚪','white circle','symbols'],
+  ['🔺','red triangle up','symbols'],['🔻','red triangle down','symbols'],
+  ['🔁','repeat','symbols'],['🔀','shuffle','symbols'],['▶️','play','symbols'],
+  ['⏸️','pause','symbols'],['⏹️','stop','symbols'],['🔊','loud sound','symbols'],
+  ['🔇','muted','symbols'],['📶','signal bars','symbols'],['📍','round pushpin','symbols'],
+  ['😀','grinning face','faces'],['😊','smiling face','faces'],['😎','sunglasses','faces'],
+  ['🤓','nerd','faces'],['🧐','monocle','faces'],['🤔','thinking','faces'],
+  ['💪','muscle','faces'],['👍','thumbs up','faces'],['👎','thumbs down','faces'],
+  ['👋','waving hand','faces'],['🤝','handshake','faces'],['🧠','brain','faces'],
+  ['👁️','eye','faces'],['🫶','heart hands','faces'],['🙌','raised hands','faces'],
+  ['🎭','performing arts','faces'],['🧑‍💻','technologist','faces'],['🧑‍🎨','artist','faces'],
+  ['🧑‍🔬','scientist','faces'],['🧑‍🏫','teacher','faces'],['🧙','mage','faces'],
+];
+
+const EMOJI_CATEGORIES = [
+  { id: 'all', label: 'All' },
+  { id: 'files', label: '📁 Files' },
+  { id: 'nature', label: '🌿 Nature' },
+  { id: 'objects', label: '💡 Objects' },
+  { id: 'symbols', label: '❤️ Symbols' },
+  { id: 'faces', label: '😀 People' },
+];
+
 const ICON_OPTIONS = [
   ['folder-icon-default', 'Default Arrow (Chevron)'],
   ['folder-icon-folder', 'Folder'],
@@ -1121,48 +1190,86 @@ class IconPickerModal extends Modal {
     super(app);
     this.currentValue = currentValue || '';
     this.onSelect = onSelect;
-    this._filterVal = '';
-    this._emojiInput = null;
-    this._iconListEl = null;
+    this._emojiCategory = 'all';
+    this._emojiSearch = '';
+    this._lucideSearch = '';
+    this._emojiGridEl = null;
+    this._lucideGridEl = null;
   }
   onOpen() {
     const { contentEl } = this;
     contentEl.empty();
     contentEl.addClass('fcs-icon-picker-modal');
     contentEl.createEl('h2', { text: 'Choose an icon' });
-    new Setting(contentEl).setName('Emoji or text').setDesc('Type any emoji or short text. Press Enter or click Use.')
-      .addText((text) => {
-        text.setValue(this.currentValue.startsWith('lucide:') ? '' : this.currentValue);
-        text.inputEl.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && text.getValue().trim()) { this.onSelect(text.getValue().trim()); this.close(); }
-        });
-        this._emojiInput = text;
-      })
-      .addButton((btn) => btn.setButtonText('Use').onClick(() => {
-        const val = this._emojiInput?.getValue().trim();
-        if (val) { this.onSelect(val); this.close(); }
-      }));
-    new Setting(contentEl).setName('Lucide icon').setDesc('Search by name and click to select.')
-      .addText((text) => {
-        text.setPlaceholder('folder, star, heart…');
-        text.onChange((v) => { this._filterVal = v.toLowerCase(); this._renderIcons(); });
+
+    // ── Emoji section ──────────────────────────────────────
+    contentEl.createEl('h3', { text: 'Emoji', cls: 'fcs-picker-section-heading' });
+
+    // Category tabs
+    const tabBar = contentEl.createDiv({ cls: 'fcs-emoji-tabs' });
+    const renderTabs = () => {
+      tabBar.empty();
+      EMOJI_CATEGORIES.forEach(({ id, label }) => {
+        const tab = tabBar.createSpan({ text: label, cls: 'fcs-emoji-tab' });
+        if (this._emojiCategory === id) tab.classList.add('is-active');
+        tab.addEventListener('click', () => { this._emojiCategory = id; renderTabs(); this._renderEmojis(); });
       });
-    this._iconListEl = contentEl.createDiv({ cls: 'fcs-icon-picker-grid' });
-    this._renderIcons();
+    };
+    renderTabs();
+
+    // Emoji search
+    const emojiSearchWrap = contentEl.createDiv({ cls: 'fcs-picker-search-row' });
+    const emojiSearchInput = emojiSearchWrap.createEl('input', { type: 'text', placeholder: 'Search emoji…', cls: 'fcs-picker-search' });
+    emojiSearchInput.addEventListener('input', () => { this._emojiSearch = emojiSearchInput.value.toLowerCase(); this._renderEmojis(); });
+
+    // Emoji grid
+    this._emojiGridEl = contentEl.createDiv({ cls: 'fcs-icon-picker-grid fcs-emoji-grid' });
+    this._renderEmojis();
+
+    // ── Lucide section ─────────────────────────────────────
+    contentEl.createEl('h3', { text: 'Lucide icons', cls: 'fcs-picker-section-heading' });
+
+    const lucideSearchWrap = contentEl.createDiv({ cls: 'fcs-picker-search-row' });
+    const lucideSearchInput = lucideSearchWrap.createEl('input', { type: 'text', placeholder: 'folder, star, heart…', cls: 'fcs-picker-search' });
+    lucideSearchInput.addEventListener('input', () => { this._lucideSearch = lucideSearchInput.value.toLowerCase(); this._renderLucide(); });
+
+    this._lucideGridEl = contentEl.createDiv({ cls: 'fcs-icon-picker-grid' });
+    this._renderLucide();
+
     new Setting(contentEl).addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()));
   }
-  _renderIcons() {
-    if (!this._iconListEl) return;
-    this._iconListEl.empty();
+
+  _renderEmojis() {
+    if (!this._emojiGridEl) return;
+    this._emojiGridEl.empty();
+    const filtered = EMOJI_DATA.filter(([emoji, name, cat]) => {
+      const catMatch = this._emojiCategory === 'all' || cat === this._emojiCategory;
+      const searchMatch = !this._emojiSearch || name.includes(this._emojiSearch) || emoji.includes(this._emojiSearch);
+      return catMatch && searchMatch;
+    });
+    filtered.forEach(([emoji, name]) => {
+      const btn = this._emojiGridEl.createDiv({ cls: 'fcs-icon-option fcs-emoji-option' });
+      btn.textContent = emoji;
+      btn.title = name;
+      btn.addEventListener('click', () => { this.onSelect(emoji); this.close(); });
+    });
+    if (!filtered.length) this._emojiGridEl.createSpan({ text: 'No results', cls: 'fcs-picker-empty' });
+  }
+
+  _renderLucide() {
+    if (!this._lucideGridEl) return;
+    this._lucideGridEl.empty();
     const allIcons = (typeof getIconIds === 'function' ? getIconIds() : []);
-    const filtered = this._filterVal ? allIcons.filter(id => id.includes(this._filterVal)) : allIcons;
+    const filtered = this._lucideSearch ? allIcons.filter(id => id.includes(this._lucideSearch)) : allIcons;
     filtered.slice(0, 80).forEach(id => {
-      const btn = this._iconListEl.createDiv({ cls: 'fcs-icon-option' });
+      const btn = this._lucideGridEl.createDiv({ cls: 'fcs-icon-option' });
       btn.title = id;
       try { setIcon(btn, id); } catch (_) { btn.textContent = id; }
       btn.addEventListener('click', () => { this.onSelect(`lucide:${id}`); this.close(); });
     });
+    if (!filtered.length) this._lucideGridEl.createSpan({ text: 'No results', cls: 'fcs-picker-empty' });
   }
+
   onClose() { this.contentEl.empty(); }
 }
 
