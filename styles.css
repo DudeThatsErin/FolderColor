@@ -110,6 +110,8 @@
   --folder-color-custom-dark-8: 143,167,255;
   --folder-color-custom-dark-9: 184,149,255;
   --folder-color-custom-dark-10: 227,140,255;
+  --folder-color-custom-dark-11: 248,113,113;
+  --folder-color-custom-dark-12: 52,211,153;
   --folder-color-custom-light-1: 255,107,157;
   --folder-color-custom-light-2: 255,142,114;
   --folder-color-custom-light-3: 255,198,109;
@@ -120,6 +122,8 @@
   --folder-color-custom-light-8: 143,167,255;
   --folder-color-custom-light-9: 184,149,255;
   --folder-color-custom-light-10: 227,140,255;
+  --folder-color-custom-light-11: 248,113,113;
+  --folder-color-custom-light-12: 52,211,153;
 
   --folder-color-custom-1: var(--folder-color-custom-dark-1);
   --folder-color-custom-2: var(--folder-color-custom-dark-2);
@@ -131,6 +135,8 @@
   --folder-color-custom-8: var(--folder-color-custom-dark-8);
   --folder-color-custom-9: var(--folder-color-custom-dark-9);
   --folder-color-custom-10: var(--folder-color-custom-dark-10);
+  --folder-color-custom-11: var(--folder-color-custom-dark-11);
+  --folder-color-custom-12: var(--folder-color-custom-dark-12);
 
   --f1: 220,150,190;
   --f2: 210,140,215;
@@ -170,6 +176,8 @@ body.theme-dark {
   --folder-color-custom-8: var(--folder-color-custom-dark-8);
   --folder-color-custom-9: var(--folder-color-custom-dark-9);
   --folder-color-custom-10: var(--folder-color-custom-dark-10);
+  --folder-color-custom-11: var(--folder-color-custom-dark-11);
+  --folder-color-custom-12: var(--folder-color-custom-dark-12);
 }
 
 body.theme-light {
@@ -193,6 +201,8 @@ body.theme-light {
   --folder-color-custom-8: var(--folder-color-custom-light-8);
   --folder-color-custom-9: var(--folder-color-custom-light-9);
   --folder-color-custom-10: var(--folder-color-custom-light-10);
+  --folder-color-custom-11: var(--folder-color-custom-light-11);
+  --folder-color-custom-12: var(--folder-color-custom-light-12);
 }
 
 /* =========================================================
@@ -747,7 +757,7 @@ body.palette-custom {
 .nav-folder-title {
   font-size: var(--font-size);
   font-family: var(--font-family);
-  color: var(--text-color);
+  color: var(--fcs-text, var(--text-color));
   position: relative;
   box-sizing: border-box;
   border-radius: var(--left-border-radius) var(--right-border-radius) var(--right-border-radius) var(--left-border-radius);
@@ -1450,3 +1460,48 @@ body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type=
   stroke: var(--text-color);
 }
 .fcs-folder-color-path { overflow-wrap: anywhere; color: var(--text-muted); }
+
+/* Icon picker modal */
+.fcs-icon-picker-modal .fcs-icon-picker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+.fcs-icon-picker-modal .fcs-icon-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.1s, border-color 0.1s;
+}
+.fcs-icon-picker-modal .fcs-icon-option:hover {
+  background: var(--background-modifier-hover);
+  border-color: var(--background-modifier-border);
+}
+.fcs-icon-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  min-height: 40px;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+}
+
+/* Emoji icons in the file explorer */
+.fcs-folder-icon.fcs-emoji-icon,
+.fcs-file-icon.fcs-emoji-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  line-height: 1;
+  font-size: 1em;
+}

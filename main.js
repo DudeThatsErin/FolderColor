@@ -1,4 +1,4 @@
-const { Plugin, PluginSettingTab, Setting, Modal, Notice, TFolder, setIcon } = require('obsidian');
+const { Plugin, PluginSettingTab, Setting, Modal, Notice, TFolder, TFile, FuzzySuggestModal, getIconIds, setIcon } = require('obsidian');
 
 const PALETTE_OPTIONS = [
   ['palette-pink', 'Pink / Purple'],
@@ -226,20 +226,29 @@ const CSS_VARIABLES = [
   '--active-font-style', '--active-text-decoration', '--active-text-transform', '--active-font-variant',
   '--active-letter-spacing', '--active-word-spacing', '--active-line-height',
   '--active-icon-color-dark', '--active-icon-color-light', '--active-icon-opacity', '--active-icon-size', '--active-icon-stroke-width',
-  ...Array.from({ length: 10 }, (_, index) => `--folder-color-custom-dark-${index + 1}`),
-  ...Array.from({ length: 10 }, (_, index) => `--folder-color-custom-light-${index + 1}`),
+  ...Array.from({ length: 12 }, (_, index) => `--folder-color-custom-dark-${index + 1}`),
+  ...Array.from({ length: 12 }, (_, index) => `--folder-color-custom-light-${index + 1}`),
   '--background-custom-color-value', '--border-custom-color-value', '--folder-icon-color', '--file-icon-color',
   '--active-bg-custom-color', '--active-border-custom-color', '--active-text-color', '--active-icon-color', '--fcs-icon-stroke-width',
-  ...Array.from({ length: 10 }, (_, index) => `--folder-color-custom-${index + 1}`)
+  ...Array.from({ length: 12 }, (_, index) => `--folder-color-custom-${index + 1}`)
 ];
 
 const DEFAULT_SETTINGS = {
   settingsSchemaVersion: 5,
   palette: 'palette-pink',
-  customColorsDark: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
-  customColorsLight: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff'],
+  customColorsDark: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff', '#f87171', '#34d399'],
+  customColorsLight: ['#ff6b9d', '#ff8e72', '#ffc66d', '#e5d66f', '#7ed6a5', '#65d6ce', '#72c7ff', '#8fa7ff', '#b895ff', '#e38cff', '#f87171', '#34d399'],
   // Path -> hex colour, or null when that folder and its contents should stay uncoloured.
   folderColorOverrides: {},
+  folderIconOverrides: {},
+  fileColorOverrides: {},
+  fileIconOverrides: {},
+  folderTextColorOverrides: {},
+  fileTextColorOverrides: {},
+  customIcons: ['', '', '', '', '', '', '', '', '', '', '', ''],
+  folderIconEmoji: '',
+  fileIconEmoji: '',
+  activeIconEmoji: '',
 
   visualStyle: 'appearance-background',
   backgroundColorMode: 'background-folder-color',
@@ -359,6 +368,12 @@ const DEFAULT_SETTINGS = {
   activeIconThickness: 1.5
 };
 
+function resolveOverrideIcon(value) {
+  if (!value || typeof value !== 'string') return null;
+  if (value.startsWith('lucide:')) return { type: 'lucide', name: value.slice(7) };
+  return { type: 'emoji', value };
+}
+
 function parseColorOverride(override) {
   if (override === null) return { noColor: true, color: null, inherit: false };
   if (typeof override === 'string') return { noColor: false, color: override, inherit: false };
@@ -450,6 +465,12 @@ function migrateSettings(saved) {
   if (!migrated.folderColorOverrides || typeof migrated.folderColorOverrides !== 'object' || Array.isArray(migrated.folderColorOverrides)) {
     migrated.folderColorOverrides = {};
   }
+  if (!migrated.folderIconOverrides || typeof migrated.folderIconOverrides !== 'object') migrated.folderIconOverrides = {};
+  if (!migrated.fileColorOverrides || typeof migrated.fileColorOverrides !== 'object') migrated.fileColorOverrides = {};
+  if (!migrated.fileIconOverrides || typeof migrated.fileIconOverrides !== 'object') migrated.fileIconOverrides = {};
+  if (!migrated.folderTextColorOverrides || typeof migrated.folderTextColorOverrides !== 'object') migrated.folderTextColorOverrides = {};
+  if (!migrated.fileTextColorOverrides || typeof migrated.fileTextColorOverrides !== 'object') migrated.fileTextColorOverrides = {};
+  if (!Array.isArray(migrated.customIcons)) migrated.customIcons = DEFAULT_SETTINGS.customIcons.slice();
   migrated.settingsSchemaVersion = 5;
 
   delete migrated.customColors;
@@ -468,18 +489,31 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     this.applySettings();
     this.addSettingTab(new FolderColorSystemSettingTab(this.app, this));
     this.registerEvent(this.app.workspace.on('file-menu', (menu, file) => {
-      if (!(file instanceof TFolder)) return;
-      const override = this.getFolderColorOverride(file.path);
-      menu.addSeparator();
-      menu.addItem((item) => item.setTitle('Set custom folder color…').setIcon('palette')
-        .onClick(() => {
-          const parsed = parseColorOverride(override);
-          new FolderColorOverrideModal(this, file.path, parsed.color || '#7f6aa8', parsed.inherit).open();
-        }));
-      menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(override === null)
-        .onClick(() => this.setFolderColorOverride(file.path, null)));
-      if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
-        .onClick(() => this.clearFolderColorOverride(file.path)));
+      if (file instanceof TFolder) {
+        const override = this.getFolderColorOverride(file.path);
+        menu.addSeparator();
+        menu.addItem((item) => item.setTitle('Set custom folder color…').setIcon('palette')
+          .onClick(() => {
+            const parsed = parseColorOverride(override);
+            new FolderColorOverrideModal(this, file.path, parsed.color || '#7f6aa8', parsed.inherit).open();
+          }));
+        menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(override === null)
+          .onClick(() => this.setFolderColorOverride(file.path, null)));
+        if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
+          .onClick(() => this.clearFolderColorOverride(file.path)));
+        menu.addItem((item) => item.setTitle('Set custom folder icon…').setIcon('image')
+          .onClick(() => new FolderIconOverrideModal(this, file.path).open()));
+        menu.addItem((item) => item.setTitle('Set custom folder text color…').setIcon('type')
+          .onClick(() => new FolderTextColorOverrideModal(this, file.path).open()));
+      } else if (file instanceof TFile) {
+        menu.addSeparator();
+        menu.addItem((item) => item.setTitle('Set custom file color…').setIcon('palette')
+          .onClick(() => new FileColorOverrideModal(this, file.path).open()));
+        menu.addItem((item) => item.setTitle('Set custom file icon…').setIcon('image')
+          .onClick(() => new FileIconOverrideModal(this, file.path).open()));
+        menu.addItem((item) => item.setTitle('Set custom file text color…').setIcon('type')
+          .onClick(() => new FileTextColorOverrideModal(this, file.path).open()));
+      }
     }));
 
     this.iconObserver = new MutationObserver(() => {
@@ -584,17 +618,24 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     if (iconEl.dataset.fcsIcon !== iconName) {
       iconEl.empty?.();
       if (!iconEl.empty) iconEl.replaceChildren();
-      try {
-        setIcon(iconEl, iconName);
+      iconEl.classList.remove('fcs-emoji-icon');
+      if (iconName.startsWith('emoji:')) {
+        iconEl.textContent = iconName.slice(6);
+        iconEl.classList.add('fcs-emoji-icon');
         iconEl.dataset.fcsIcon = iconName;
-      } catch (error) {
-        iconEl.replaceChildren();
+      } else {
         try {
-          setIcon(iconEl, fallback);
-          iconEl.dataset.fcsIcon = fallback;
-        } catch (_) {
-          iconEl.remove();
-          return null;
+          setIcon(iconEl, iconName);
+          iconEl.dataset.fcsIcon = iconName;
+        } catch (error) {
+          iconEl.replaceChildren();
+          try {
+            setIcon(iconEl, fallback);
+            iconEl.dataset.fcsIcon = fallback;
+          } catch (_) {
+            iconEl.remove();
+            return null;
+          }
         }
       }
     }
@@ -653,6 +694,30 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         return;
       }
       collapse.classList.remove('fcs-uses-iconic-icon');
+
+      // Per-folder icon override: walk up to find an inheriting ancestor.
+      const folderPath = title?.dataset?.path || folder.dataset?.path;
+      let overrideIconStr = null;
+      {
+        let cur = folder;
+        while (cur) {
+          const t = cur.querySelector(':scope > .nav-folder-title');
+          const p = t?.dataset?.path || cur.dataset?.path;
+          const ov = p && this.settings?.folderIconOverrides?.[p];
+          if (ov?.icon && (cur === folder || ov.inherit)) { overrideIconStr = ov.icon; break; }
+          cur = cur.parentElement?.closest('.nav-folder');
+        }
+      }
+      if (overrideIconStr) {
+        const resolved = resolveOverrideIcon(overrideIconStr);
+        if (resolved) {
+          const iconStr = resolved.type === 'emoji' ? `emoji:${resolved.value}` : resolved.name;
+          const iconEl2 = this.setInjectedIcon(collapse, 'fcs-folder-icon', iconStr, 'folder');
+          if (iconEl2) collapse.classList.add('fcs-has-custom-icon');
+          return;
+        }
+      }
+
       let settingValue;
       if (isCollapsed) {
         settingValue = s.folderIcon;
@@ -660,6 +725,14 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         settingValue = s.folderOpenIcon;
       } else {
         settingValue = s.folderIcon;
+      }
+
+      // Global emoji override for folder icons.
+      const folderEmojiOverride = s.folderIconEmoji;
+      if (folderEmojiOverride) {
+        const iconEl2 = this.setInjectedIcon(collapse, 'fcs-folder-icon', `emoji:${folderEmojiOverride}`, 'folder');
+        if (iconEl2) collapse.classList.add('fcs-has-custom-icon');
+        return;
       }
 
       const iconName = iconNameFromSetting(settingValue);
@@ -691,6 +764,25 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         return;
       }
 
+      // Per-file icon override.
+      const filePath = title?.dataset?.path;
+      const fileIconOverride = filePath && this.settings?.fileIconOverrides?.[filePath];
+      if (fileIconOverride === null) {
+        existing?.remove();
+        content.classList.remove('fcs-has-file-icon');
+        return;
+      }
+      if (fileIconOverride?.icon) {
+        const resolved = resolveOverrideIcon(fileIconOverride.icon);
+        if (resolved) {
+          const iconStr = resolved.type === 'emoji' ? `emoji:${resolved.value}` : resolved.name;
+          const iconEl = this.setInjectedIcon(content, 'fcs-file-icon', iconStr, 'file');
+          if (iconEl) content.classList.add('fcs-has-file-icon');
+          else content.classList.remove('fcs-has-file-icon');
+          return;
+        }
+      }
+
       if (!useActive && !useRegular) {
         existing?.remove();
         content.classList.remove('fcs-has-file-icon');
@@ -698,7 +790,8 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       }
 
       const settingValue = useActive ? s.activeIcon : s.fileIcon;
-      const iconName = iconNameFromSetting(settingValue) || 'file';
+      const emojiOverride = useActive ? s.activeIconEmoji : s.fileIconEmoji;
+      const iconName = emojiOverride ? `emoji:${emojiOverride}` : (iconNameFromSetting(settingValue) || 'file');
       const iconEl = this.setInjectedIcon(content, 'fcs-file-icon', iconName, 'file');
       if (!iconEl) {
         content.classList.remove('fcs-has-file-icon');
@@ -756,7 +849,68 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         currentFolder = currentFolder.parentElement?.closest('.nav-folder');
       }
 
+      // Also check direct file color override for fcs-no-color.
+      if (!noColor && item.classList.contains('nav-file')) {
+        const ft = item.querySelector(':scope > .nav-file-title');
+        const fp = ft?.dataset?.path;
+        if (fp && Object.prototype.hasOwnProperty.call(this.settings?.fileColorOverrides || {}, fp)) {
+          noColor = parseColorOverride(this.settings.fileColorOverrides[fp]).noColor;
+        }
+      }
       item.classList.toggle('fcs-no-color', noColor);
+    });
+
+    // File color overrides: set --fc directly on .nav-file elements.
+    const fileColorOverrides = this.settings?.fileColorOverrides || {};
+    explorer.querySelectorAll('.nav-file').forEach((file) => {
+      const ft = file.querySelector(':scope > .nav-file-title');
+      const fp = ft?.dataset?.path;
+      const raw = fp && Object.prototype.hasOwnProperty.call(fileColorOverrides, fp) ? fileColorOverrides[fp] : undefined;
+      if (raw === undefined) { file.style.removeProperty('--fc'); return; }
+      const parsed = parseColorOverride(raw);
+      if (!parsed.noColor && parsed.color && hexToRgbString(parsed.color, '') !== '') file.style.setProperty('--fc', hexToRgbString(parsed.color));
+      else file.style.removeProperty('--fc');
+    });
+
+    // Folder text color overrides.
+    const folderTextOverrides = this.settings?.folderTextColorOverrides || {};
+    explorer.querySelectorAll('.nav-folder').forEach((folder) => {
+      const title = folder.querySelector(':scope > .nav-folder-title');
+      const path = title?.dataset?.path || folder.dataset?.path;
+      // Walk up to find an inheriting ancestor text color override.
+      let textColor = null;
+      {
+        let cur = folder;
+        while (cur) {
+          const t = cur.querySelector(':scope > .nav-folder-title');
+          const p = t?.dataset?.path || cur.dataset?.path;
+          const ov = p && folderTextOverrides[p];
+          if (ov?.color && (cur === folder || ov.inherit)) { textColor = ov.color; break; }
+          cur = cur.parentElement?.closest('.nav-folder');
+        }
+      }
+      if (textColor) title?.style.setProperty('--fcs-text', textColor);
+      else title?.style.removeProperty('--fcs-text');
+    });
+
+    // File text color overrides (own override or inheriting folder ancestor).
+    const fileTextOverrides = this.settings?.fileTextColorOverrides || {};
+    explorer.querySelectorAll('.nav-file-title').forEach((title) => {
+      const fp = title?.dataset?.path;
+      const ownOverride = fp && fileTextOverrides[fp];
+      if (ownOverride?.color) { title.style.setProperty('--fcs-text', ownOverride.color); return; }
+      // Walk up folder ancestors for an inheriting text color.
+      let textColor = null;
+      let cur = title.parentElement?.closest('.nav-folder');
+      while (cur) {
+        const t = cur.querySelector(':scope > .nav-folder-title');
+        const p = t?.dataset?.path || cur.dataset?.path;
+        const ov = p && folderTextOverrides[p];
+        if (ov?.color && ov.inherit) { textColor = ov.color; break; }
+        cur = cur.parentElement?.closest('.nav-folder');
+      }
+      if (textColor) title.style.setProperty('--fcs-text', textColor);
+      else title.style.removeProperty('--fcs-text');
     });
   }
 
@@ -794,7 +948,8 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     document.querySelectorAll('.fcs-has-file-icon').forEach(el => el.classList.remove('fcs-has-file-icon'));
     document.querySelectorAll('.fcs-active-folder').forEach(el => el.classList.remove('fcs-active-folder'));
     document.querySelectorAll('.nav-folder.fcs-no-color, .nav-file.fcs-no-color').forEach((el) => el.classList.remove('fcs-no-color'));
-    document.querySelectorAll('.nav-folder').forEach((el) => el.style.removeProperty('--fc'));
+    document.querySelectorAll('.nav-folder, .nav-file').forEach((el) => el.style.removeProperty('--fc'));
+    document.querySelectorAll('.nav-folder-title, .nav-file-title').forEach((el) => el.style.removeProperty('--fcs-text'));
   }
 
   applySettings() {
@@ -961,6 +1116,269 @@ class FolderColorOverrideModal extends Modal {
   onClose() { this.contentEl.empty(); }
 }
 
+class IconPickerModal extends Modal {
+  constructor(app, currentValue, onSelect) {
+    super(app);
+    this.currentValue = currentValue || '';
+    this.onSelect = onSelect;
+    this._filterVal = '';
+    this._emojiInput = null;
+    this._iconListEl = null;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.addClass('fcs-icon-picker-modal');
+    contentEl.createEl('h2', { text: 'Choose an icon' });
+    new Setting(contentEl).setName('Emoji or text').setDesc('Type any emoji or short text. Press Enter or click Use.')
+      .addText((text) => {
+        text.setValue(this.currentValue.startsWith('lucide:') ? '' : this.currentValue);
+        text.inputEl.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && text.getValue().trim()) { this.onSelect(text.getValue().trim()); this.close(); }
+        });
+        this._emojiInput = text;
+      })
+      .addButton((btn) => btn.setButtonText('Use').onClick(() => {
+        const val = this._emojiInput?.getValue().trim();
+        if (val) { this.onSelect(val); this.close(); }
+      }));
+    new Setting(contentEl).setName('Lucide icon').setDesc('Search by name and click to select.')
+      .addText((text) => {
+        text.setPlaceholder('folder, star, heart…');
+        text.onChange((v) => { this._filterVal = v.toLowerCase(); this._renderIcons(); });
+      });
+    this._iconListEl = contentEl.createDiv({ cls: 'fcs-icon-picker-grid' });
+    this._renderIcons();
+    new Setting(contentEl).addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()));
+  }
+  _renderIcons() {
+    if (!this._iconListEl) return;
+    this._iconListEl.empty();
+    const allIcons = (typeof getIconIds === 'function' ? getIconIds() : []);
+    const filtered = this._filterVal ? allIcons.filter(id => id.includes(this._filterVal)) : allIcons;
+    filtered.slice(0, 80).forEach(id => {
+      const btn = this._iconListEl.createDiv({ cls: 'fcs-icon-option' });
+      btn.title = id;
+      try { setIcon(btn, id); } catch (_) { btn.textContent = id; }
+      btn.addEventListener('click', () => { this.onSelect(`lucide:${id}`); this.close(); });
+    });
+  }
+  onClose() { this.contentEl.empty(); }
+}
+
+class FolderIconOverrideModal extends Modal {
+  constructor(plugin, path) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.path = path;
+    const existing = plugin.settings.folderIconOverrides?.[path];
+    this.icon = existing?.icon || '';
+    this.inherit = existing?.inherit || false;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl('h2', { text: 'Custom folder icon' });
+    contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
+    const iconPreview = contentEl.createDiv({ cls: 'fcs-icon-preview' });
+    this._renderPreview(iconPreview);
+    let pickBtn;
+    new Setting(contentEl).setName('Icon').setDesc('Emoji or Lucide icon for this folder.')
+      .addButton((btn) => { pickBtn = btn; btn.setButtonText(this.icon ? 'Change icon…' : 'Pick icon…').onClick(() => {
+        new IconPickerModal(this.app, this.icon, (val) => { this.icon = val; this._renderPreview(iconPreview); pickBtn.setButtonText('Change icon…'); }).open();
+      }); });
+    new Setting(contentEl).setName('Apply to folder contents').setDesc('Also applies this icon to subfolders inside this folder.')
+      .addToggle((t) => t.setValue(this.inherit).onChange((v) => { this.inherit = v; }));
+    const buttonRow = new Setting(contentEl)
+      .addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((btn) => btn.setButtonText('Save icon').setCta().onClick(async () => {
+        if (!this.icon) return;
+        this.plugin.settings.folderIconOverrides = this.plugin.settings.folderIconOverrides || {};
+        this.plugin.settings.folderIconOverrides[this.path] = { icon: this.icon, inherit: this.inherit };
+        await this.plugin.saveSettings();
+        new Notice(`Folder Color System: icon saved for ${this.path}.`);
+        this.close();
+      }));
+    if (this.plugin.settings.folderIconOverrides?.[this.path]) {
+      buttonRow.addButton((btn) => btn.setButtonText('Remove icon').setWarning().onClick(async () => {
+        delete this.plugin.settings.folderIconOverrides[this.path];
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    }
+  }
+  _renderPreview(el) {
+    el.empty();
+    if (!this.icon) { el.textContent = '(no icon selected)'; return; }
+    const resolved = resolveOverrideIcon(this.icon);
+    if (!resolved) return;
+    if (resolved.type === 'emoji') el.textContent = resolved.value;
+    else { try { setIcon(el, resolved.name); } catch (_) { el.textContent = resolved.name; } }
+  }
+  onClose() { this.contentEl.empty(); }
+}
+
+class FileColorOverrideModal extends Modal {
+  constructor(plugin, path) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.path = path;
+    const existing = plugin.settings.fileColorOverrides?.[path];
+    const parsed = parseColorOverride(existing);
+    this.color = parsed.color || '#7f6aa8';
+    this.noColor = parsed.noColor;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl('h2', { text: 'Custom file color' });
+    contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
+    new Setting(contentEl).setName('Color').setDesc('Overrides the palette color for this file row.')
+      .addColorPicker((p) => p.setValue(this.color).onChange((v) => { this.color = v; this.noColor = false; }));
+    new Setting(contentEl).setName('No color for this file').setDesc('Removes all color from this file row.')
+      .addToggle((t) => t.setValue(this.noColor).onChange((v) => { this.noColor = v; }));
+    const buttonRow = new Setting(contentEl)
+      .addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((btn) => btn.setButtonText('Save').setCta().onClick(async () => {
+        this.plugin.settings.fileColorOverrides = this.plugin.settings.fileColorOverrides || {};
+        this.plugin.settings.fileColorOverrides[this.path] = this.noColor ? null : this.color;
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    if (Object.prototype.hasOwnProperty.call(this.plugin.settings.fileColorOverrides || {}, this.path)) {
+      buttonRow.addButton((btn) => btn.setButtonText('Remove override').setWarning().onClick(async () => {
+        delete this.plugin.settings.fileColorOverrides[this.path];
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    }
+  }
+  onClose() { this.contentEl.empty(); }
+}
+
+class FileIconOverrideModal extends Modal {
+  constructor(plugin, path) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.path = path;
+    const existing = plugin.settings.fileIconOverrides?.[path];
+    this.icon = (existing && typeof existing === 'object') ? (existing.icon || '') : '';
+    this.hidden = existing === null;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl('h2', { text: 'Custom file icon' });
+    contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
+    const iconPreview = contentEl.createDiv({ cls: 'fcs-icon-preview' });
+    this._renderPreview(iconPreview);
+    let pickBtn;
+    new Setting(contentEl).setName('Icon').setDesc('Emoji or Lucide icon for this file. Overrides the global file icon setting.')
+      .addButton((btn) => { pickBtn = btn; btn.setButtonText(this.icon ? 'Change icon…' : 'Pick icon…').onClick(() => {
+        new IconPickerModal(this.app, this.icon, (val) => { this.icon = val; this.hidden = false; this._renderPreview(iconPreview); pickBtn.setButtonText('Change icon…'); }).open();
+      }); });
+    new Setting(contentEl).setName('Hide icon for this file').setDesc('Suppress the icon on this file row, even when file icons are enabled globally.')
+      .addToggle((t) => t.setValue(this.hidden).onChange((v) => { this.hidden = v; }));
+    const buttonRow = new Setting(contentEl)
+      .addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((btn) => btn.setButtonText('Save').setCta().onClick(async () => {
+        this.plugin.settings.fileIconOverrides = this.plugin.settings.fileIconOverrides || {};
+        if (this.hidden) { this.plugin.settings.fileIconOverrides[this.path] = null; }
+        else if (this.icon) { this.plugin.settings.fileIconOverrides[this.path] = { icon: this.icon }; }
+        else { delete this.plugin.settings.fileIconOverrides[this.path]; }
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    if (Object.prototype.hasOwnProperty.call(this.plugin.settings.fileIconOverrides || {}, this.path)) {
+      buttonRow.addButton((btn) => btn.setButtonText('Remove override').setWarning().onClick(async () => {
+        delete this.plugin.settings.fileIconOverrides[this.path];
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    }
+  }
+  _renderPreview(el) {
+    el.empty();
+    if (!this.icon) { el.textContent = '(no icon selected)'; return; }
+    const resolved = resolveOverrideIcon(this.icon);
+    if (!resolved) return;
+    if (resolved.type === 'emoji') el.textContent = resolved.value;
+    else { try { setIcon(el, resolved.name); } catch (_) { el.textContent = resolved.name; } }
+  }
+  onClose() { this.contentEl.empty(); }
+}
+
+class FolderTextColorOverrideModal extends Modal {
+  constructor(plugin, path) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.path = path;
+    const existing = plugin.settings.folderTextColorOverrides?.[path];
+    this.color = existing?.color || '#ffffff';
+    this.inherit = existing?.inherit || false;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl('h2', { text: 'Custom folder text color' });
+    contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
+    new Setting(contentEl).setName('Text color').setDesc('Overrides the text color for this folder name.')
+      .addColorPicker((p) => p.setValue(this.color).onChange((v) => { this.color = v; }));
+    new Setting(contentEl).setName('Apply to folder contents').setDesc('Also applies this text color to files and subfolders inside this folder.')
+      .addToggle((t) => t.setValue(this.inherit).onChange((v) => { this.inherit = v; }));
+    const buttonRow = new Setting(contentEl)
+      .addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((btn) => btn.setButtonText('Save').setCta().onClick(async () => {
+        this.plugin.settings.folderTextColorOverrides = this.plugin.settings.folderTextColorOverrides || {};
+        this.plugin.settings.folderTextColorOverrides[this.path] = { color: this.color, inherit: this.inherit };
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    if (Object.prototype.hasOwnProperty.call(this.plugin.settings.folderTextColorOverrides || {}, this.path)) {
+      buttonRow.addButton((btn) => btn.setButtonText('Remove override').setWarning().onClick(async () => {
+        delete this.plugin.settings.folderTextColorOverrides[this.path];
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    }
+  }
+  onClose() { this.contentEl.empty(); }
+}
+
+class FileTextColorOverrideModal extends Modal {
+  constructor(plugin, path) {
+    super(plugin.app);
+    this.plugin = plugin;
+    this.path = path;
+    const existing = plugin.settings.fileTextColorOverrides?.[path];
+    this.color = existing?.color || '#ffffff';
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl('h2', { text: 'Custom file text color' });
+    contentEl.createEl('p', { text: this.path, cls: 'fcs-folder-color-path' });
+    new Setting(contentEl).setName('Text color').setDesc('Overrides the text color for this file name.')
+      .addColorPicker((p) => p.setValue(this.color).onChange((v) => { this.color = v; }));
+    const buttonRow = new Setting(contentEl)
+      .addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()))
+      .addButton((btn) => btn.setButtonText('Save').setCta().onClick(async () => {
+        this.plugin.settings.fileTextColorOverrides = this.plugin.settings.fileTextColorOverrides || {};
+        this.plugin.settings.fileTextColorOverrides[this.path] = { color: this.color };
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    if (Object.prototype.hasOwnProperty.call(this.plugin.settings.fileTextColorOverrides || {}, this.path)) {
+      buttonRow.addButton((btn) => btn.setButtonText('Remove override').setWarning().onClick(async () => {
+        delete this.plugin.settings.fileTextColorOverrides[this.path];
+        await this.plugin.saveSettings();
+        this.close();
+      }));
+    }
+  }
+  onClose() { this.contentEl.empty(); }
+}
+
 class FolderColorSystemSettingTab extends PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
@@ -1008,8 +1426,8 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
         type: 'group',
         heading: 'Palette',
         items: [
-          self.dropdownDef('Color Palette', 'Select the 10-color repeating palette.', 'palette', PALETTE_OPTIONS, ['palette', 'colors'], true),
-          ...Array.from({ length: 10 }, (_, i) => [
+          self.dropdownDef('Color Palette', 'Select the 12-color repeating palette.', 'palette', PALETTE_OPTIONS, ['palette', 'colors'], true),
+          ...Array.from({ length: 12 }, (_, i) => [
             self.colorDef(
               `Custom Palette Color ${i + 1} (Dark Mode)`,
               '',
@@ -1025,6 +1443,61 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
               is('palette', 'palette-custom')
             ),
           ]).flat(),
+        ],
+      },
+      {
+        type: 'group',
+        heading: 'Custom Icons',
+        items: [
+          {
+            name: 'Custom icon slots',
+            desc: 'Up to 12 reusable icons (emoji or Lucide) you can reference in other tools. Slots show here so you can manage them in one place.',
+            searchTerms: ['custom icons', 'emoji icons', 'lucide icons'],
+            render: (setting) => {
+              setting.settingEl.style.flexDirection = 'column';
+              setting.settingEl.style.alignItems = 'flex-start';
+              setting.nameEl.style.marginBottom = '4px';
+              setting.controlEl.style.flexWrap = 'wrap';
+              setting.controlEl.style.gap = '8px';
+              setting.controlEl.style.width = '100%';
+              const customIcons = Array.isArray(self.plugin.settings.customIcons) ? self.plugin.settings.customIcons : DEFAULT_SETTINGS.customIcons.slice();
+              Array.from({ length: 12 }, (_, i) => {
+                const slot = setting.controlEl.createDiv({ cls: 'fcs-custom-icon-slot' });
+                slot.style.cssText = 'display:flex;align-items:center;gap:6px;min-width:160px;';
+                const label = slot.createSpan({ text: `${i + 1}:` });
+                label.style.cssText = 'min-width:20px;font-size:12px;color:var(--text-muted);';
+                const preview = slot.createSpan({ cls: 'fcs-icon-preview-small' });
+                preview.style.cssText = 'min-width:24px;font-size:18px;display:flex;align-items:center;justify-content:center;';
+                const renderPreview = () => {
+                  preview.empty();
+                  const val = self.plugin.settings.customIcons?.[i] || '';
+                  if (!val) { preview.textContent = '—'; return; }
+                  const resolved = resolveOverrideIcon(val);
+                  if (resolved?.type === 'emoji') preview.textContent = resolved.value;
+                  else if (resolved?.type === 'lucide') { try { setIcon(preview, resolved.name); } catch (_) { preview.textContent = resolved.name; } }
+                };
+                renderPreview();
+                const editBtn = slot.createEl('button', { text: 'Edit', cls: 'mod-cta' });
+                editBtn.style.cssText = 'font-size:11px;padding:2px 8px;';
+                editBtn.addEventListener('click', () => {
+                  new IconPickerModal(self.app, self.plugin.settings.customIcons?.[i] || '', async (val) => {
+                    if (!Array.isArray(self.plugin.settings.customIcons)) self.plugin.settings.customIcons = DEFAULT_SETTINGS.customIcons.slice();
+                    self.plugin.settings.customIcons[i] = val;
+                    await self.plugin.saveSettings();
+                    renderPreview();
+                  }).open();
+                });
+                const clearBtn = slot.createEl('button', { text: '✕' });
+                clearBtn.style.cssText = 'font-size:11px;padding:2px 6px;';
+                clearBtn.addEventListener('click', async () => {
+                  if (!Array.isArray(self.plugin.settings.customIcons)) self.plugin.settings.customIcons = DEFAULT_SETTINGS.customIcons.slice();
+                  self.plugin.settings.customIcons[i] = '';
+                  await self.plugin.saveSettings();
+                  renderPreview();
+                });
+              });
+            },
+          },
         ],
       },
       {
@@ -1085,7 +1558,8 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
         type: 'group',
         heading: 'Folder icons',
         items: [
-          self.dropdownDef('Closed Folder Icon', 'Icon shown when a folder is closed. Default Arrow is a single right-pointing chevron.', 'folderIcon', ICON_OPTIONS, ['folder icon', 'closed icon']),
+          self.dropdownDef('Closed Folder Icon', 'Icon shown when a folder is closed. Default Arrow is a single right-pointing chevron. Set Emoji Override below to use an emoji instead.', 'folderIcon', ICON_OPTIONS, ['folder icon', 'closed icon']),
+          self.textDef('Closed Folder Icon Emoji Override', 'Enter any emoji to use instead of the Lucide icon above. Leave empty to use the Lucide icon.', 'folderIconEmoji', ['folder emoji', 'folder icon emoji']),
           self.dropdownDef('Open Folder Icon', 'Choose a different icon for open folders, or keep the closed-folder icon.', 'folderOpenIcon', OPEN_ICON_OPTIONS, ['open icon', 'expanded folder icon']),
           self.dropdownDef('Folder Icon Color', 'Match Palette Color follows the palette color assigned to each folder row. Choose Custom Color to use the colors below.', 'folderIconColorMode', ICON_COLOR_OPTIONS, ['folder icon color'], true),
           self.colorDef('Folder Icon Custom Color (Dark Mode)', 'Used when Folder Icon Color is set to Custom Color.', 'folderIconColorDark', ['folder icon custom color', 'dark mode folder icon'], is('folderIconColorMode', 'icon-custom-color')),
@@ -1099,8 +1573,9 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
         type: 'group',
         heading: 'File icons',
         items: [
-          self.toggleDef('Show File Icons', 'Adds a Lucide-style icon to every file row.', 'showFileIcons', ['file icons', 'show icons']),
-          self.dropdownDef('File Icon', '', 'fileIcon', FILE_ICON_OPTIONS, ['file icon shape']),
+          self.toggleDef('Show File Icons', 'Adds an icon to every file row.', 'showFileIcons', ['file icons', 'show icons']),
+          self.dropdownDef('File Icon', 'Select a Lucide icon, or set Emoji Override below to use an emoji instead.', 'fileIcon', FILE_ICON_OPTIONS, ['file icon shape']),
+          self.textDef('File Icon Emoji Override', 'Enter any emoji to use instead of the Lucide icon above. Leave empty to use the Lucide icon.', 'fileIconEmoji', ['file emoji', 'file icon emoji']),
           self.dropdownDef('File Icon Color', 'Match Palette Color follows the palette color assigned to each file row. Choose Custom Color to use the colors below.', 'fileIconColorMode', FILE_ICON_COLOR_OPTIONS, ['file icon color'], true),
           self.colorDef('File Icon Custom Color (Dark Mode)', 'Used when File Icon Color is set to Custom Color.', 'fileIconColorDark', ['file icon custom color', 'dark mode file icon'], is('fileIconColorMode', 'file-icon-custom-color')),
           self.colorDef('File Icon Custom Color (Light Mode)', 'Used when File Icon Color is set to Custom Color.', 'fileIconColorLight', ['file icon custom color', 'light mode file icon'], is('fileIconColorMode', 'file-icon-custom-color')),
@@ -1170,7 +1645,8 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
           self.sliderDef('Active Word Spacing', '', 'activeWordSpacing', -5, 20, 0.1, 'px', ['selected word spacing'], enabled('activeFileTypography')),
           self.sliderDef('Active Line Height', '', 'activeLineHeight', 0.8, 2.5, 0.05, '', ['selected line height'], enabled('activeFileTypography')),
           self.toggleDef('Custom Active File Icon', 'Use a dedicated icon for the active file, even when regular file icons are disabled.', 'activeShowIcon', ['selected icon', 'current file icon'], true),
-          self.dropdownDef('Active File Icon', '', 'activeIcon', ACTIVE_ICON_OPTIONS, ['selected file icon'], false, enabled('activeShowIcon')),
+          self.dropdownDef('Active File Icon', 'Select a Lucide icon, or set Emoji Override below to use an emoji instead.', 'activeIcon', ACTIVE_ICON_OPTIONS, ['selected file icon'], false, enabled('activeShowIcon')),
+          self.textDef('Active File Icon Emoji Override', 'Enter any emoji to use for the active file icon. Leave empty to use the Lucide icon.', 'activeIconEmoji', ['active emoji', 'active icon emoji']),
           self.dropdownDef('Active Icon Color', '', 'activeIconColorMode', ACTIVE_ICON_COLOR_OPTIONS, ['selected icon color'], true, enabled('activeShowIcon')),
           self.colorDef('Custom Active Icon Color (Dark Mode)', '', 'activeIconColorDark', ['selected custom icon color', 'dark mode active icon'], () => enabled('activeShowIcon')() && is('activeIconColorMode', 'active-icon-custom-color')()),
           self.colorDef('Custom Active Icon Color (Light Mode)', '', 'activeIconColorLight', ['selected custom icon color', 'light mode active icon'], () => enabled('activeShowIcon')() && is('activeIconColorMode', 'active-icon-custom-color')()),
@@ -1413,7 +1889,7 @@ class FolderColorSystemSettingTab extends PluginSettingTab {
   }
 
   getPalettePath(path) {
-    const match = /^(customColorsDark|customColorsLight)\.(\d+)$/.exec(path);
+    const match = /^(customColorsDark|customColorsLight|customIcons)\.(\d+)$/.exec(path);
     if (!match) return null;
     return { key: match[1], index: Number(match[2]) };
   }
