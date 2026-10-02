@@ -875,6 +875,8 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
   }
 
   refreshFolderColorOverrides(explorer) {
+    if (!explorer) explorer = document.querySelector('.workspace-leaf-content[data-type="file-explorer"]');
+    if (!explorer) return;
     const overrides = this.settings?.folderColorOverrides || {};
 
     // First pass: apply direct overrides only.
