@@ -444,10 +444,13 @@ function resolveOverrideIcon(value) {
 }
 
 function parseColorOverride(override) {
-  if (override === null) return { noColor: true, color: null, inherit: false };
-  if (typeof override === 'string') return { noColor: false, color: override, inherit: false };
-  if (override && typeof override === 'object') return { noColor: false, color: override.color || null, inherit: Boolean(override.inherit) };
-  return { noColor: false, color: null, inherit: false };
+  if (override === null) return { noColor: true, color: null, inherit: true, keepBorder: false };
+  if (typeof override === 'string') return { noColor: false, color: override, inherit: false, keepBorder: false };
+  if (override && typeof override === 'object') {
+    if (override.noColor) return { noColor: true, color: null, inherit: Boolean(override.inherit !== false), keepBorder: Boolean(override.keepBorder) };
+    return { noColor: false, color: override.color || null, inherit: Boolean(override.inherit), keepBorder: false };
+  }
+  return { noColor: false, color: null, inherit: false, keepBorder: false };
 }
 
 function hexToRgbString(value, fallback = '0,0,0') {
@@ -566,8 +569,8 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
             const parsed = parseColorOverride(override);
             new FolderColorOverrideModal(this, file.path, parsed.color || '#7f6aa8', parsed.inherit).open();
           }));
-        menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(override === null)
-          .onClick(() => this.setFolderColorOverride(file.path, null)));
+        menu.addItem((item) => item.setTitle('No color for folder and contents').setIcon('ban').setChecked(parseColorOverride(override).noColor)
+          .onClick(() => new NoColorOptionsModal(this, file.path, override).open()));
         if (override !== undefined) menu.addItem((item) => item.setTitle('Use palette color').setIcon('rotate-ccw')
           .onClick(() => this.clearFolderColorOverride(file.path)));
         menu.addItem((item) => item.setTitle('Set custom folder icon…').setIcon('image')
@@ -905,6 +908,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
       const folder = item.classList.contains('nav-folder') ? item : item.parentElement?.closest('.nav-folder');
       let currentFolder = folder;
       let noColor = false;
+      let keepBorder = false;
 
       // The closest folder override wins. A child can therefore opt back into
       // a custom colour beneath an uncoloured parent.
@@ -912,7 +916,9 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         const title = currentFolder.querySelector(':scope > .nav-folder-title');
         const path = title?.dataset?.path || currentFolder.dataset?.path;
         if (path && Object.prototype.hasOwnProperty.call(overrides, path)) {
-          noColor = parseColorOverride(overrides[path]).noColor;
+          const parsed = parseColorOverride(overrides[path]);
+          noColor = parsed.noColor;
+          keepBorder = parsed.keepBorder;
           break;
         }
         currentFolder = currentFolder.parentElement?.closest('.nav-folder');
@@ -923,10 +929,13 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
         const ft = item.querySelector(':scope > .nav-file-title');
         const fp = ft?.dataset?.path;
         if (fp && Object.prototype.hasOwnProperty.call(this.settings?.fileColorOverrides || {}, fp)) {
-          noColor = parseColorOverride(this.settings.fileColorOverrides[fp]).noColor;
+          const parsed = parseColorOverride(this.settings.fileColorOverrides[fp]);
+          noColor = parsed.noColor;
+          keepBorder = parsed.keepBorder;
         }
       }
-      item.classList.toggle('fcs-no-color', noColor);
+      item.classList.toggle('fcs-no-color', noColor && !keepBorder);
+      item.classList.toggle('fcs-no-color-keep-border', noColor && keepBorder);
     });
 
     // File color overrides: set --fc directly on .nav-file elements.
@@ -1017,6 +1026,7 @@ module.exports = class FolderColorSystemPlugin extends Plugin {
     document.querySelectorAll('.fcs-has-file-icon').forEach(el => el.classList.remove('fcs-has-file-icon'));
     document.querySelectorAll('.fcs-active-folder').forEach(el => el.classList.remove('fcs-active-folder'));
     document.querySelectorAll('.nav-folder.fcs-no-color, .nav-file.fcs-no-color').forEach((el) => el.classList.remove('fcs-no-color'));
+    document.querySelectorAll('.nav-folder.fcs-no-color-keep-border, .nav-file.fcs-no-color-keep-border').forEach((el) => el.classList.remove('fcs-no-color-keep-border'));
     document.querySelectorAll('.nav-folder, .nav-file').forEach((el) => el.style.removeProperty('--fc'));
     document.querySelectorAll('.nav-folder-title, .nav-file-title').forEach((el) => el.style.removeProperty('--fcs-text'));
   }
@@ -1479,6 +1489,50 @@ class FileTextColorOverrideModal extends Modal {
       buttonRow.addButton((btn) => btn.setButtonText('Remove override').setWarning().onClick(async () => {
         delete this.plugin.settings.fileTextColorOverrides[this.path];
         await this.plugin.saveSettings();
+        this.close();
+      }));
+    }
+  }
+  onClose() { this.contentEl.empty(); }
+}
+
+class NoColorOptionsModal extends Modal {
+  constructor(app, plugin, path, currentOverride) {
+    super(app);
+    this.plugin = plugin;
+    this.path = path;
+    this.currentOverride = currentOverride;
+  }
+  onOpen() {
+    const { contentEl } = this;
+    contentEl.empty();
+    contentEl.createEl('h3', { text: 'No color options' });
+
+    const parsed = parseColorOverride(this.currentOverride);
+    let inherit = parsed.noColor ? (parsed.inherit !== false) : true;
+    let keepBorder = parsed.keepBorder || false;
+
+    new Setting(contentEl)
+      .setName('Apply to folder contents')
+      .setDesc('Remove color from all files and subfolders inside this folder.')
+      .addToggle((t) => t.setValue(inherit).onChange((v) => { inherit = v; }));
+
+    new Setting(contentEl)
+      .setName('Keep border')
+      .setDesc('Show folder border even with no background color.')
+      .addToggle((t) => t.setValue(keepBorder).onChange((v) => { keepBorder = v; }));
+
+    const buttonRow = new Setting(contentEl);
+    buttonRow.addButton((btn) => btn.setButtonText('Save').setCta().onClick(async () => {
+      await this.plugin.setFolderColorOverride(this.path, { noColor: true, inherit, keepBorder });
+      this.close();
+    }));
+    buttonRow.addButton((btn) => btn.setButtonText('Cancel').onClick(() => this.close()));
+    if (parsed.noColor) {
+      buttonRow.addButton((btn) => btn.setButtonText('Remove no-color').setWarning().onClick(async () => {
+        delete this.plugin.settings.folderColorOverrides[this.path];
+        await this.plugin.saveSettings();
+        this.plugin.refreshFolderColorOverrides();
         this.close();
       }));
     }

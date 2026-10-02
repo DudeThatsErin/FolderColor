@@ -1459,6 +1459,20 @@ body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type=
   color: var(--text-color);
   stroke: var(--text-color);
 }
+/* Keep border variant: suppress background/fill only, retain border and box-shadow */
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color-keep-border > :is(.nav-folder-title, .nav-file-title) {
+  background: transparent;
+  background-image: none;
+}
+body.folder-color-system-active .workspace-leaf-content[data-type="file-explorer"] :is(.nav-folder, .nav-file).fcs-no-color-keep-border > :is(.nav-folder-title, .nav-file-title)::after {
+  content: none;
+  display: none;
+}
+body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .fcs-no-color-keep-border :is(.fcs-folder-icon, .fcs-file-icon),
+body.folder-color-system-active.icon-colorful .workspace-leaf-content[data-type="file-explorer"] .fcs-no-color-keep-border :is(.fcs-folder-icon, .fcs-file-icon) svg {
+  color: var(--text-color);
+  stroke: var(--text-color);
+}
 .fcs-folder-color-path { overflow-wrap: anywhere; color: var(--text-muted); }
 
 /* Icon picker modal */
